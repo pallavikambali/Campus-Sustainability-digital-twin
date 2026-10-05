@@ -1,0 +1,63 @@
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
+from app.core.config import settings
+from app.db import get_session
+from app.recommendations.contracts import RecommendationResponse
+from app.recommendations.provider import (
+    OpenAIRecommendationProvider,
+    RecommendationProvider,
+)
+from app.recommendations.service import (
+    IncidentNotFoundError,
+    generate_recommendation,
+    get_latest_recommendation,
+)
+
+router = APIRouter(prefix="/api/v1/incidents", tags=["recommendations"])
+
+
+def get_recommendation_provider() -> RecommendationProvider | None:
+    api_key = settings.openai_api_key
+    if api_key is None or not api_key.get_secret_value().strip():
+        return None
+    try:
+        return OpenAIRecommendationProvider(
+            api_key.get_secret_value(),
+            settings.openai_model,
+            settings.openai_timeout_seconds,
+        )
+    except Exception:
+        return None
+
+
+@router.post(
+    "/{incident_id}/recommendation",
+    response_model=RecommendationResponse,
+)
+def create_incident_recommendation(
+    incident_id: UUID,
+    session: Session = Depends(get_session),
+    provider: RecommendationProvider | None = Depends(get_recommendation_provider),
+) -> RecommendationResponse:
+    try:
+        with session.begin():
+            return generate_recommendation(session, incident_id, provider)
+    except IncidentNotFoundError as error:
+        raise HTTPException(status_code=404, detail="Incident not found") from error
+
+
+@router.get(
+    "/{incident_id}/recommendation",
+    response_model=RecommendationResponse | None,
+)
+def read_latest_incident_recommendation(
+    incident_id: UUID,
+    session: Session = Depends(get_session),
+) -> RecommendationResponse | None:
+    try:
+        return get_latest_recommendation(session, incident_id)
+    except IncidentNotFoundError as error:
+        raise HTTPException(status_code=404, detail="Incident not found") from error
