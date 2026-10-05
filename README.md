@@ -1,66 +1,169 @@
-# Campus Sustainability Digital Twin
+# Campus Sustainability Digital Twin 🌱
 
-Phase 1 establishes the project foundation, PostgreSQL schema, and minimal API and frontend shells. It does not include simulation, anomaly detection, dashboard features, Computer Vision, GenAI, recommendations, or reporting.
+A smart campus sustainability platform that creates a **digital twin of campus zones** to monitor energy, water, occupancy, and waste, detect abnormal conditions, and provide intelligent recommendations.
 
-## Prerequisites
+## 📌 Overview
 
-- Python 3.11 or newer
-- [uv](https://docs.astral.sh/uv/)
-- Node.js and npm
-- Docker Compose
+The Campus Sustainability Digital Twin is designed to help educational institutions monitor and improve the use of campus resources.
 
-## Configure and initialize
+The system combines:
 
-Run these commands from the repository root in PowerShell:
+- Simulated IoT sensor data
+- Rule-based anomaly detection
+- Computer Vision for waste detection
+- A real-time 2D digital twin dashboard
+- GenAI-powered explanations and recommendations
+- PostgreSQL-based data storage
 
-```powershell
-Copy-Item .env.example .env
-docker compose up -d db
-Set-Location backend
-uv sync --dev
-uv run alembic upgrade head
-uv run pytest
-uv run ruff check .
-```
+The project is designed as an MVP that can later be connected to real sensors such as ESP32/Arduino devices.
 
-The migration creates the six Phase 1 tables and seeds Academic Block, Library, and Hostel Block. The local database is PostgreSQL 16 and is compatible with the intended Supabase PostgreSQL deployment.
+---
 
-## Run the applications
+## 🎯 Problem Statement
 
-In one terminal, from the repository root:
+Educational campuses consume significant amounts of electricity and water and generate different types of waste. Without continuous monitoring, problems such as:
 
-```powershell
-Set-Location backend
-uv run uvicorn app.main:app --reload --port 8000
-```
+- Excessive energy consumption
+- Water leakage
+- Abnormal occupancy
+- Improper waste disposal
 
-In another terminal, from the repository root:
+may go unnoticed.
 
-```powershell
-Set-Location frontend
-npm install
-npm run dev
-```
+Our solution provides a centralized digital platform to monitor campus conditions, detect anomalies, visualize them on a digital twin, and provide actionable recommendations.
 
-The frontend is available at <http://localhost:5173>. The API health endpoint at <http://localhost:8000/api/v1/health> checks PostgreSQL connectivity.
+---
 
-## Frontend checks
+## 💡 Key Features
 
-From `frontend`:
+### 1. Digital Twin Dashboard
 
-```powershell
-npm run build
-```
+A 2D digital representation of campus zones that displays their current operational status.
 
-The build runs the TypeScript checker before bundling with Vite.
+Currently modeled zones include:
 
-## Database operations
+- 🏫 Academic Block
+- 📚 Library
+- 🏠 Hostel Block
 
-From `backend`:
+Each zone can have a status such as:
 
-```powershell
-uv run alembic upgrade head
-uv run alembic current
-```
+- 🟢 Normal
+- 🟡 Warning
+- 🔴 Critical
 
-Stop the local database with `docker compose down`. Its data remains in the named Docker volume. Removing that volume is destructive and is not required for normal development.
+---
+
+### 2. Sensor Data Simulation
+
+Since physical IoT sensors are not required for the MVP, the system currently simulates sensor readings for:
+
+- ⚡ Energy consumption
+- 💧 Water consumption
+- 👥 Occupancy
+
+The simulator can generate different scenarios such as:
+
+- Energy spike
+- Water leakage
+- Occupancy surge
+- Reset to normal conditions
+
+This architecture allows simulated sensors to be replaced with real IoT devices later.
+
+---
+
+### 3. Rule-Based Anomaly Detection
+
+The system uses deterministic rules to identify abnormal conditions.
+
+Examples:
+
+- Excessive energy consumption
+- Possible water leakage
+- Occupancy exceeding the zone capacity
+
+Detected anomalies are converted into incidents with severity levels such as:
+
+- WARNING
+- CRITICAL
+
+> **Important:** GenAI is not responsible for detecting anomalies. Detection is performed using predefined rules and Computer Vision.
+
+---
+
+### 4. Computer Vision Waste Detection
+
+The project includes a replaceable waste detection architecture.
+
+Currently, a mock detector is used for the MVP, while the system is designed to support an optional YOLO-based detector.
+
+The system can classify waste detection severity based on the number of detected waste objects.
+
+Severity levels include:
+
+- NONE
+- LOW
+- MEDIUM
+- HIGH
+
+A high-severity waste detection can generate an active incident for the corresponding zone.
+
+---
+
+### 5. GenAI Recommendations 🤖
+
+GenAI is used after an incident has already been detected.
+
+It receives trusted incident information and provides:
+
+- Explanation of the detected issue
+- Possible impact
+- Recommended actions
+- Advisory guidance
+
+The system also includes a rule-based fallback so that recommendations remain available even when the AI service is unavailable.
+
+> **GenAI does not perform anomaly detection. It explains detected incidents and provides recommendations.**
+
+---
+
+## 🏗️ System Architecture
+
+```text
+                    ┌─────────────────────┐
+                    │   Sensor Simulator  │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │      Backend        │
+                    │      FastAPI        │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │   Rule-Based        │
+                    │ Anomaly Detection   │
+                    └──────────┬──────────┘
+                               │
+              ┌────────────────┴────────────────┐
+              ▼                                 ▼
+    ┌──────────────────┐              ┌──────────────────┐
+    │   Digital Twin   │              │ Computer Vision  │
+    │    Dashboard     │              │ Waste Detection  │
+    └────────┬─────────┘              └────────┬─────────┘
+             │                                 │
+             └────────────────┬────────────────┘
+                              ▼
+                    ┌─────────────────────┐
+                    │       GenAI         │
+                    │ Recommendations &   │
+                    │    Explanations     │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │     PostgreSQL      │
+                    │      Database       │
+                    └─────────────────────┘
