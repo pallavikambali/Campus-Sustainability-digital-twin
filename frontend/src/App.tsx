@@ -9,6 +9,7 @@ import { SensorReadings } from './components/SensorReadings';
 import { StatCard } from './components/StatCard';
 import { WasteDetectionPanel } from './components/WasteDetectionPanel';
 import { ZoneCard } from './components/ZoneCard';
+import { ThemeSelector } from './components/ThemeSelector';
 
 const POLL_INTERVAL_MS = 4_000;
 const ZONE_ORDER = ['Academic Block', 'Library', 'Hostel Block'];
@@ -85,10 +86,14 @@ function App() {
               A live view of resource use and conditions across the campus.
             </p>
           </div>
-          <div className="refresh-note">
-            <span className="refresh-mark" aria-hidden="true" />
-            Refreshes every 4 seconds
-          </div>
+          <div className="page-heading__actions">
+  <ThemeSelector />
+
+  <div className="refresh-note">
+    <span className="refresh-mark" aria-hidden="true" />
+    Refreshes every 4 seconds
+  </div>
+</div>
         </div>
 
         {pageError && (

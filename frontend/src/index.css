@@ -1,5 +1,32 @@
 @import 'tailwindcss';
 
+:root[data-theme='light'] {
+  --theme-bg: #f7f8fa;
+  --theme-surface: #ffffff;
+  --theme-text: #17202a;
+  --theme-muted: #667085;
+  --theme-primary: #2f7d5a;
+  --theme-border: #e4e7ec;
+}
+
+:root[data-theme='dark'] {
+  --theme-bg: #070d12;
+  --theme-surface: #0b141b;
+  --theme-text: #f4f7f8;
+  --theme-muted: #71879a;
+  --theme-primary: #19c7d9;
+  --theme-border: #1c2b35;
+}
+
+:root[data-theme='eco'] {
+  --theme-bg: #f3f7f0;
+  --theme-surface: #ffffff;
+  --theme-text: #18301f;
+  --theme-muted: #607064;
+  --theme-primary: #397a4a;
+  --theme-border: #d7e3d4;
+}
+
 :root {
   font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
   color: #1f302e;
@@ -21,6 +48,12 @@
   --red-pale: #f8e3df;
   --blue: #4b8193;
   --mono: 'Cascadia Code', 'Consolas', monospace;
+
+    --app-bg: var(--theme-bg);
+  --app-surface: var(--theme-surface);
+  --app-text: var(--theme-text);
+  --app-muted: var(--theme-muted);
+  --app-border: var(--theme-border);
 }
 
 * {
@@ -36,11 +69,19 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  background-color: var(--canvas);
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
   background-image:
-    radial-gradient(ellipse at 12% 0%, rgb(207 231 216 / 46%), transparent 34rem),
-    radial-gradient(ellipse at 96% 23%, rgb(219 231 229 / 34%), transparent 30rem),
-    repeating-linear-gradient(0deg, transparent 0 31px, rgb(38 73 61 / 2.4%) 31px 32px);
+    radial-gradient(
+      ellipse at 15% 0%,
+      rgb(0 190 220 / 8%),
+      transparent 32rem
+    ),
+    radial-gradient(
+      ellipse at 90% 20%,
+      rgb(0 120 150 / 6%),
+      transparent 30rem
+    );
 }
 
 button,
@@ -2129,4 +2170,1657 @@ h1 {
   aspect-ratio: 1;
   border-radius: 50%;
   background: #39805a;
+}
+
+.page-heading__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.theme-selector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  border: 1px solid var(--theme-border);
+  border-radius: 12px;
+  background: var(--theme-surface);
+}
+
+.theme-selector__button {
+  border: 0;
+  border-radius: 8px;
+  padding: 7px 10px;
+  background: transparent;
+  color: var(--theme-muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-selector__button:hover {
+  color: var(--theme-text);
+  background: var(--theme-bg);
+}
+
+.theme-selector__button.is-active {
+  background: var(--theme-primary);
+  color: #ffffff;
+}
+
+@media (max-width: 760px) {
+  .page-heading__actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .theme-selector {
+    width: fit-content;
+  }
+
+}
+/* =========================================================
+   DARK THEME — OPERATIONS / CONTROL ROOM
+   ========================================================= */
+
+:root[data-theme='dark'] {
+  /* Existing design variables */
+  --ink: #f4f7f8;
+  --muted: #71879a;
+  --line: #1c2b35;
+  --surface: #0b141b;
+  --canvas: #070d12;
+
+  /* Status colors */
+  --green: #20d889;
+  --green-dark: #0b9f78;
+  --green-pale: #0d2b25;
+  --mint: #12372f;
+
+  --amber: #f5b62f;
+  --amber-pale: #30240d;
+
+  --red: #ff4d55;
+  --red-pale: #321519;
+
+  --blue: #22c7df;
+
+  /* Theme aliases */
+  --app-bg: #070d12;
+  --app-surface: #0b141b;
+  --app-text: #f4f7f8;
+  --app-muted: #71879a;
+  --app-border: #1c2b35;
+}
+
+:root[data-theme='dark'] {
+/* ---------- GLOBAL ---------- */
+
+body {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+
+/* ---------- TOP BAR ---------- */
+
+.topbar {
+  border-bottom-color: #182832;
+  background: rgb(7 13 18 / 94%);
+}
+
+.brand {
+  color: var(--theme-text);
+}
+
+.brand-mark {
+  background: #0c5362;
+}
+
+.brand-mark i {
+  background: #18c7d9;
+}
+
+.brand-mark i:nth-child(2) {
+  background: #f0b72d;
+}
+
+.brand-mark i:nth-child(3) {
+  background: #39d98a;
+}
+
+.brand-copy > span {
+  color: #6f8798;
+}
+
+.top-navigation a {
+  color: #6f8798;
+}
+
+.top-navigation a:hover,
+.top-navigation a:first-child {
+  color: #19c7d9;
+}
+
+.top-navigation a:first-child::after {
+  background: #19c7d9;
+}
+
+
+/* ---------- SYSTEM STATUS ---------- */
+
+.system-indicator {
+  border-color: #19404b;
+  background: #0b2028;
+  color: #42d7df;
+}
+
+.system-indicator time {
+  border-left-color: #20343e;
+  color: #6f8798;
+}
+
+.system-indicator--offline {
+  border-color: #54272b;
+  background: #261519;
+  color: #ff7378;
+}
+
+
+/* ---------- HEADINGS ---------- */
+
+.eyebrow {
+  color: #4fa5b5;
+}
+
+.page-heading h1,
+.section-heading h2,
+.panel-heading h2 {
+  color: #f4f7f8;
+}
+
+.page-subtitle {
+  color: #71879a;
+}
+
+.refresh-note {
+  color: #71879a;
+}
+
+
+/* ---------- CONNECTION / LOADING ---------- */
+
+.connection-banner,
+.loading-state {
+  border-color: #5a431c;
+  background: #211a0d;
+  color: #e9c56b;
+}
+
+.connection-banner.is-error {
+  border-color: #5a292c;
+  background: #241416;
+  color: #ff7b80;
+}
+
+.loading-state {
+  border-color: #263942;
+  background: #0b171e;
+  color: #dce8ec;
+}
+
+.loading-state__spinner,
+.mini-spinner {
+  border-color: #29414b;
+  border-top-color: #19c7d9;
+}
+
+
+/* ---------- STAT CARDS ---------- */
+
+.stat-card {
+  border-color: #1c2b35;
+  background: #0b141b;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 22%);
+}
+
+.stat-card__topline {
+  color: #7890a0;
+}
+
+.stat-card__value {
+  color: #f4f7f8;
+}
+
+.stat-card__detail {
+  color: #657c8c;
+}
+
+.stat-card--mint .stat-card__tick {
+  border-color: #1f9c76;
+  background: #10352c;
+}
+
+.stat-card--amber .stat-card__tick {
+  border-color: #d89c25;
+  background: #35270d;
+}
+
+.stat-card--red .stat-card__tick {
+  border-color: #e04d55;
+  background: #351619;
+}
+
+.stat-card--ink .stat-card__tick {
+  border-color: #258aa0;
+  background: #102b34;
+}
+
+
+/* ---------- ACTION MESSAGE ---------- */
+
+.action-message {
+  border-color: #1c5c49;
+  background: #0c2922;
+  color: #63dba5;
+}
+
+.action-message > span {
+  background: #123d31;
+}
+
+
+/* ---------- ZONE CARDS ---------- */
+
+.zone-card {
+  border-color: #1c2b35;
+  background: #0b141b;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 22%);
+}
+
+.zone-card__type {
+  color: #71879a;
+}
+
+.zone-card h3 {
+  color: #f1f5f6;
+}
+
+.zone-metric {
+  border-color: #1b2b34;
+  background: #0d1920;
+}
+
+.zone-metric--water {
+  background: #0c1c23;
+}
+
+.zone-metric__label {
+  color: #718798;
+}
+
+.zone-metric strong {
+  color: #e7eef1;
+}
+
+.zone-metric--water strong {
+  color: #4fc8dc;
+}
+
+.occupancy-row strong {
+  color: #dce7ea;
+}
+
+.occupancy-row strong span {
+  color: #71879a;
+}
+
+.occupancy-percent {
+  color: #71879a;
+}
+
+.occupancy-track {
+  background: #17252d;
+}
+
+.zone-card__incident-row {
+  color: #71879a;
+}
+
+.zone-card__incident-row strong {
+  color: #d7e2e5;
+}
+
+.zone-waste-row {
+  color: #71879a;
+}
+
+.zone-waste-row > strong {
+  color: #55c58d;
+}
+
+.zone-waste-row > strong small {
+  color: #71879a;
+}
+
+
+/* ---------- STATUS PILLS ---------- */
+
+.status-pill {
+  border-color: #1b5745;
+  background: #0d2a23;
+  color: #55d69b;
+}
+
+.status-pill__dot {
+  background: #24d88b;
+}
+
+.status-pill--warning {
+  border-color: #654b1b;
+  background: #2c220e;
+  color: #f0bd48;
+}
+
+.status-pill--critical {
+  border-color: #64272c;
+  background: #301519;
+  color: #ff666d;
+}
+
+
+/* ---------- SIMULATION CONTROLS ---------- */
+
+.zone-card__controls-heading {
+  color: #71879a;
+}
+
+.simulation-button {
+  border-color: #1c3039;
+  background: #0d1920;
+  color: #91b5be;
+}
+
+.simulation-button:hover:not(:disabled) {
+  border-color: #247080;
+  background: #102630;
+}
+
+.simulation-button--reset {
+  border-color: #39301b;
+  background: #19170f;
+  color: #c7a85e;
+}
+
+.simulation-button__marker {
+  background: #12352d;
+  color: #5fd49d;
+}
+
+.simulation-button--reset .simulation-button__marker {
+  background: #30270f;
+  color: #d0aa4d;
+}
+
+
+/* ---------- DIGITAL TWIN ---------- */
+
+.map-legend {
+  color: #71879a;
+}
+
+.campus-map {
+  border-color: #1c3039;
+  background-color: #081219;
+
+  background-image:
+    linear-gradient(
+      30deg,
+      transparent 49.7%,
+      rgb(48 133 151 / 12%) 49.8% 50.2%,
+      transparent 50.3%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgb(50 130 150 / 8%) 0 1px,
+      transparent 1px 42px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgb(50 130 150 / 8%) 0 1px,
+      transparent 1px 42px
+    );
+}
+
+.map-walkway {
+  border-color: #20323a;
+  background: #111e25;
+}
+
+.map-green-space {
+  border-color: #174c3e;
+  background: rgb(21 83 64 / 28%);
+}
+
+.map-waterline {
+  border-color: #15566a;
+  background: rgb(18 93 112 / 35%);
+}
+
+.map-caption,
+.map-road-label {
+  color: #5d7784;
+}
+
+.map-zone {
+  border-color: #20353e;
+  background: #0d1920;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 30%);
+}
+
+.map-zone__info > strong {
+  color: #e7f0f2;
+}
+
+.map-zone__info > span:last-child {
+  color: #71879a;
+}
+
+.map-building {
+  border-color: #24505a;
+  background: #10252c;
+}
+
+.map-building span {
+  border-color: #247c82;
+  background: #17454b;
+}
+
+.map-scale {
+  color: #607985;
+}
+
+
+/* ---------- WASTE WORKBENCH ---------- */
+
+.waste-workbench {
+  border-color: #1c2b35;
+  background: #0b141b;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 22%);
+}
+
+.waste-upload-form {
+  border-right-color: #1c2b35;
+  background: #0d171e;
+}
+
+.upload-symbol {
+  border-color: #1c4b54;
+  background: #0e2a30;
+  color: #55cddd;
+}
+
+.waste-upload-form__intro strong {
+  color: #e5eef0;
+}
+
+.waste-upload-form__intro p,
+.waste-note {
+  color: #71879a;
+}
+
+.form-label {
+  color: #8aa0ad;
+}
+
+.waste-upload-form select {
+  border-color: #20343e;
+  background: #0a141a;
+  color: #dce7ea;
+}
+
+.file-picker {
+  border-color: #27505a;
+  background: #0b1a21;
+}
+
+.file-picker__icon {
+  background: #103038;
+  color: #53c6d5;
+}
+
+.file-picker strong {
+  color: #9ac2cb;
+}
+
+.file-picker small {
+  color: #667f8c;
+}
+
+.file-picker__action {
+  border-color: #29414b;
+  background: #101e25;
+  color: #8db6bf;
+}
+
+.waste-output {
+  background:
+    linear-gradient(90deg, rgb(36 116 133 / 5%) 1px, transparent 1px),
+    linear-gradient(rgb(36 116 133 / 5%) 1px, transparent 1px),
+    #0a141a;
+}
+
+.waste-output-empty__grid {
+  border-color: #1c414b;
+  background: #0d2027;
+  color: #4db6c6;
+}
+
+.waste-output-empty strong {
+  color: #c9d9dd;
+}
+
+.waste-output-empty p {
+  color: #71879a;
+}
+
+.waste-history li,
+.detected-object-list li {
+  border-color: #1c2b35;
+}
+
+.waste-history li strong,
+.waste-result__heading > div > strong,
+.detected-object-list strong {
+  color: #dce7ea;
+}
+
+.waste-history li > div > span,
+.detected-object-list li > span:nth-of-type(2) {
+  color: #71879a;
+}
+
+.waste-level--none {
+  border-color: #29414b;
+  background: #122029;
+  color: #82a0aa;
+}
+
+.waste-level--low {
+  border-color: #1d5746;
+  background: #0d2a22;
+  color: #56d69b;
+}
+
+.waste-level--medium {
+  border-color: #624a1a;
+  background: #2a210e;
+  color: #edbb4a;
+}
+
+.waste-level--high {
+  border-color: #63282d;
+  background: #301519;
+  color: #ff696f;
+}
+
+.detector-provenance {
+  border-color: #1d5646;
+  background: #0d2922;
+}
+
+.detector-provenance.is-mock {
+  border-color: #5b481c;
+  background: #29220f;
+}
+
+.detector-provenance strong {
+  color: #a8c5b7;
+}
+
+.detector-provenance small {
+  color: #71879a;
+}
+
+
+/* ---------- ACTIVITY PANELS ---------- */
+
+.activity-panel {
+  border-color: #1c2b35;
+  background: #0b141b;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 22%);
+}
+
+.panel-heading {
+  border-bottom-color: #1c2b35;
+}
+
+.panel-count {
+  border-color: #263943;
+  background: #101e25;
+  color: #91aab4;
+}
+
+.incident-row {
+  border-bottom-color: #1b2a32;
+}
+
+.incident-row__title strong {
+  color: #dce7ea;
+}
+
+.incident-row__body p {
+  color: #71879a;
+}
+
+.incident-row__body time {
+  color: #5f7784;
+}
+
+.readings-table th {
+  color: #637d89;
+}
+
+.readings-table td {
+  border-top-color: #1b2a32;
+  color: #b9cbd0;
+}
+
+.readings-table td > strong {
+  color: #dce7ea;
+}
+
+.readings-table td > time,
+.readings-table td span {
+  color: #637b87;
+}
+
+
+/* ---------- RECOMMENDATIONS ---------- */
+
+.recommendation-trigger,
+.recommendation-retry {
+  border-color: #1c555f;
+  background: #0d252c;
+  color: #55cbd8;
+}
+
+.recommendation-trigger:hover,
+.recommendation-retry:hover:not(:disabled) {
+  border-color: #2b7c88;
+  background: #10313a;
+}
+
+.recommendation-trigger__mark {
+  background: #123c44;
+  color: #55cbd8;
+}
+
+.recommendation-retry {
+  border-color: #293943;
+  background: #111d24;
+  color: #8199a4;
+}
+
+.recommendation-detail {
+  border-color: #1c3039;
+  background: #0d1920;
+}
+
+.recommendation-status {
+  color: #71879a;
+}
+
+.recommendation-provenance {
+  border-bottom-color: #1d2e37;
+  color: #71879a;
+}
+
+.recommendation-mode {
+  border-color: #1d5747;
+  background: #0d2b23;
+  color: #55d69b;
+}
+
+.recommendation-mode--fallback {
+  border-color: #5c481c;
+  background: #2a210e;
+  color: #e6b94b;
+}
+
+.recommendation-facts {
+  border-left-color: #26c98b;
+  background: #0d2822;
+}
+
+.recommendation-facts h4,
+.recommendation-advisory h4 {
+  color: #9fc2b1;
+}
+
+.recommendation-facts dt {
+  color: #71879a;
+}
+
+.recommendation-facts dd {
+  color: #b9d2c4;
+}
+
+.recommendation-facts small,
+.recommendation-advisory > p,
+.recommendation-advisory li,
+.recommendation-advisory li > p {
+  color: #8198a2 !important;
+}
+
+.recommendation-advisory li > strong {
+  color: #d6e4e7;
+}
+
+.recommendation-evidence {
+  color: #55b98c;
+}
+
+.recommendation-disclaimer {
+  border-top-color: #1c2d35;
+  color: #687f89 !important;
+}
+
+
+/* ---------- EMPTY STATES ---------- */
+
+.empty-list {
+  color: #91a5ad;
+}
+
+.empty-list__mark {
+  background: #102129;
+  color: #63a7b4;
+}
+
+.empty-list__mark--calm {
+  background: #0e2922;
+  color: #57c895;
+}
+
+.empty-list p {
+  color: #71879a;
+}
+
+.empty-connection__symbol {
+  border-color: #5d292d;
+  background: #2b1619;
+  color: #ff7076;
+}
+
+
+/* ---------- FOOTER ---------- */
+
+.dashboard-footer {
+  border-top-color: #1c2b35;
+  color: #637b87;
+}
+
+
+/* ---------- PRIMARY BUTTON ---------- */
+
+.button--primary {
+  border-color: #0c9fb3;
+  background: #12b9ce;
+  color: #061116;
+}
+
+.button--primary:hover {
+  background: #19c7d9;
+}
+
+
+/* ---------- THEME SELECTOR ---------- */
+
+.theme-selector {
+  border-color: #1c3039;
+  background: #0b141b;
+}
+
+.theme-selector__button {
+  color: #71879a;
+}
+
+.theme-selector__button:hover {
+  color: #e9f1f3;
+  background: #102029;
+}
+
+.theme-selector__button.is-active {
+  background: #19c7d9;
+  color: #061116;
+}
+
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 680px) {
+  .page-heading__actions {
+    width: 100%;
+  }
+}
+/* =========================================================
+   ECO THEME — SOFT NATURE BACKGROUND
+   ========================================================= */
+
+:root[data-theme='eco'] body {
+  background:
+    radial-gradient(
+      circle at 8% 12%,
+      rgb(126 170 116 / 14%),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 92% 18%,
+      rgb(91 157 150 / 10%),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgb(174 193 132 / 9%),
+      transparent 32%
+    ),
+    #edf5eb;
+}
+/* =========================================================
+   ECO THEME — NATURAL SURFACES
+   ========================================================= */
+
+:root[data-theme='eco'] {
+  --eco-forest: #245c3a;
+  --eco-green: #3f8652;
+  --eco-leaf: #6da56f;
+  --eco-sage: #dcebd9;
+  --eco-mint: #edf6e9;
+  --eco-cream: #f8faf2;
+  --eco-earth: #a18b67;
+  --eco-water: #6ca5a1;
+}
+
+
+/* =========================================================
+   MAIN ECO SURFACE
+   ========================================================= */
+
+:root[data-theme='eco'] .app-shell {
+  background:
+    linear-gradient(
+      135deg,
+      rgb(238 247 234 / 90%),
+      rgb(247 249 239 / 94%)
+    );
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+:root[data-theme='eco'] .topbar {
+  background:
+    linear-gradient(
+      90deg,
+      #f7faf1 0%,
+      #edf5e9 50%,
+      #f5f8ee 100%
+    );
+
+  border-bottom: 1px solid #d2dfcd;
+
+  box-shadow:
+    0 2px 14px rgb(54 91 57 / 5%);
+}
+
+:root[data-theme='eco'] .brand-name {
+  color: var(--eco-forest);
+}
+
+:root[data-theme='eco'] .brand-subtitle {
+  color: #6a806e;
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+:root[data-theme='eco'] .nav-link {
+  color: #66796a;
+}
+
+:root[data-theme='eco'] .nav-link:hover {
+  color: var(--eco-forest);
+}
+
+:root[data-theme='eco'] .nav-link.active {
+  color: var(--eco-forest);
+  border-bottom-color: var(--eco-green);
+}
+
+
+/* =========================================================
+   ECO SYSTEM STATUS
+   ========================================================= */
+
+:root[data-theme='eco'] .system-status {
+  background: #e5f1e1;
+  border: 1px solid #c5dbc3;
+  color: #326645;
+}
+
+:root[data-theme='eco'] .system-status::before {
+  background: #4d9a61;
+}
+
+
+/* =========================================================
+   PAGE INTRO
+   ========================================================= */
+
+:root[data-theme='eco'] .eyebrow {
+  color: #4d8059;
+  letter-spacing: 1.5px;
+}
+
+:root[data-theme='eco'] .page-title,
+:root[data-theme='eco'] h1 {
+  color: #214c32;
+}
+
+:root[data-theme='eco'] .page-description {
+  color: #607664;
+}
+
+
+/* =========================================================
+   THEME SELECTOR
+   ========================================================= */
+
+:root[data-theme='eco'] .theme-selector {
+  background: #f8faf3;
+  border: 1px solid #cbdcc7;
+
+  box-shadow:
+    0 5px 18px rgb(49 91 53 / 7%);
+}
+
+:root[data-theme='eco'] .theme-option {
+  color: #607564;
+}
+
+:root[data-theme='eco'] .theme-option.active {
+  background:
+    linear-gradient(
+      135deg,
+      #3d8250,
+      #4d9560
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 4px 10px rgb(50 110 62 / 18%);
+}
+
+
+/* =========================================================
+   STAT CARDS
+   ========================================================= */
+
+:root[data-theme='eco'] .stat-card {
+  background:
+    linear-gradient(
+      145deg,
+      #fbfcf7,
+      #f1f7ed
+    );
+
+  border: 1px solid #d0dfca;
+
+  box-shadow:
+    0 7px 22px rgb(47 88 52 / 7%);
+}
+
+:root[data-theme='eco'] .stat-card:hover {
+  border-color: #a9c9a6;
+
+  box-shadow:
+    0 10px 26px rgb(47 88 52 / 11%);
+}
+
+:root[data-theme='eco'] .stat-card h3 {
+  color: #31553c;
+}
+
+:root[data-theme='eco'] .stat-card .stat-value {
+  color: #204b31;
+}
+
+:root[data-theme='eco'] .stat-card p {
+  color: #718276;
+}
+
+
+/* =========================================================
+   CAMPUS ZONE CARDS
+   ========================================================= */
+
+:root[data-theme='eco'] .zone-card {
+  background:
+    linear-gradient(
+      145deg,
+      #fbfcf7,
+      #f1f7ed
+    );
+
+  border-color: #cbdcc6;
+
+  box-shadow:
+    0 7px 22px rgb(47 88 52 / 6%);
+}
+
+:root[data-theme='eco'] .zone-card:hover {
+  border-color: #9fc39d;
+
+  box-shadow:
+    0 11px 28px rgb(47 88 52 / 10%);
+}
+
+:root[data-theme='eco'] .zone-card h3 {
+  color: #214d32;
+}
+
+:root[data-theme='eco'] .zone-card p {
+  color: #6b7e6f;
+}
+
+
+/* =========================================================
+   SECTION HEADINGS
+   ========================================================= */
+
+:root[data-theme='eco'] .section-heading h2 {
+  color: #214d32;
+}
+
+:root[data-theme='eco'] .section-heading .eyebrow {
+  color: #568461;
+}
+
+
+/* =========================================================
+   SIMULATION PANEL
+   ========================================================= */
+
+:root[data-theme='eco'] .simulation-panel {
+  background:
+    linear-gradient(
+      145deg,
+      #f8fbf4,
+      #eaf3e7
+    );
+
+  border-color: #c8dcc4;
+
+  box-shadow:
+    0 8px 22px rgb(47 88 52 / 6%);
+}
+
+:root[data-theme='eco'] .simulation-panel h3 {
+  color: #285638;
+}
+
+
+/* =========================================================
+   ACTIVITY / READINGS PANELS
+   ========================================================= */
+
+:root[data-theme='eco'] .activity-panel,
+:root[data-theme='eco'] .readings-panel {
+  background:
+    linear-gradient(
+      145deg,
+      #fbfcf7,
+      #f0f6ec
+    );
+
+  border-color: #ccdcca;
+
+  box-shadow:
+    0 7px 20px rgb(47 88 52 / 6%);
+}
+
+
+/* =========================================================
+   WASTE CV PANEL
+   ========================================================= */
+
+:root[data-theme='eco'] .waste-panel {
+  background:
+    linear-gradient(
+      145deg,
+      #f7fbf3,
+      #e9f4e6
+    );
+
+  border-color: #c4d9c1;
+}
+
+
+/* =========================================================
+   RECOMMENDATION PANEL
+   ========================================================= */
+
+:root[data-theme='eco'] .recommendation-card {
+  background:
+    linear-gradient(
+      145deg,
+      #f9fcf5,
+      #edf5e9
+    );
+
+  border-color: #c9dbc5;
+}
+
+
+/* =========================================================
+   PRIMARY ACTIONS
+   ========================================================= */
+
+:root[data-theme='eco'] button.primary-button {
+  background:
+    linear-gradient(
+      135deg,
+      #2f7043,
+      #4d965b
+    );
+
+  border-color: #2f7043;
+
+  box-shadow:
+    0 6px 16px rgb(47 112 67 / 18%);
+}
+
+:root[data-theme='eco'] button.primary-button:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #285f39,
+      #43834f
+    );
+}
+
+
+/* =========================================================
+   ECO SECONDARY BUTTONS
+   ========================================================= */
+
+:root[data-theme='eco'] button:not(.primary-button) {
+  border-color: #c7d9c3;
+}
+
+:root[data-theme='eco'] button:not(.primary-button):hover {
+  background: #e9f3e6;
+  border-color: #9fbe9d;
+}
+
+
+/* =========================================================
+   ECO FOOTER
+   ========================================================= */
+
+:root[data-theme='eco'] footer {
+  color: #718375;
+  border-top-color: #d2dfcd;
+}
+/* =========================================================
+   ECO THEME — STRONGER ECO IDENTITY
+   ========================================================= */
+
+:root[data-theme='eco'] body {
+  background: #e5efe2 !important;
+}
+
+:root[data-theme='eco'] .app-shell {
+  background:
+    linear-gradient(
+      135deg,
+      #e8f1e4 0%,
+      #f1f5e9 48%,
+      #e3eee0 100%
+    ) !important;
+}
+
+
+/* ---------- HEADER ---------- */
+
+:root[data-theme='eco'] .topbar {
+  background: #dcebd8 !important;
+  border-bottom: 1px solid #b9ceb4 !important;
+}
+
+:root[data-theme='eco'] .brand-name {
+  color: #214d31 !important;
+}
+
+:root[data-theme='eco'] .brand-subtitle {
+  color: #638067 !important;
+}
+
+
+/* ---------- NAVIGATION ---------- */
+
+:root[data-theme='eco'] .nav-link {
+  color: #58705d !important;
+}
+
+:root[data-theme='eco'] .nav-link:hover,
+:root[data-theme='eco'] .nav-link.active {
+  color: #205b35 !important;
+}
+
+:root[data-theme='eco'] .nav-link.active {
+  border-bottom-color: #438453 !important;
+}
+
+
+/* ---------- PAGE CONTENT ---------- */
+
+:root[data-theme='eco'] .content-section {
+  background: transparent !important;
+}
+
+:root[data-theme='eco'] h1,
+:root[data-theme='eco'] h2,
+:root[data-theme='eco'] h3 {
+  color: #214d31 !important;
+}
+
+:root[data-theme='eco'] .eyebrow {
+  color: #4d7f58 !important;
+}
+
+
+/* =========================================================
+   STAT CARDS
+   ========================================================= */
+
+:root[data-theme='eco'] .stat-card {
+  background: #f2f7ed !important;
+  border-color: #bfd3b9 !important;
+
+  box-shadow:
+    0 8px 20px rgb(46 91 52 / 10%) !important;
+}
+
+:root[data-theme='eco'] .stat-card:hover {
+  background: #edf5e8 !important;
+  border-color: #8fb58f !important;
+}
+
+:root[data-theme='eco'] .stat-card h3 {
+  color: #55705b !important;
+}
+
+:root[data-theme='eco'] .stat-card .stat-value {
+  color: #204d31 !important;
+}
+
+:root[data-theme='eco'] .stat-card p {
+  color: #718474 !important;
+}
+
+
+/* =========================================================
+   CAMPUS ZONE CARDS
+   ========================================================= */
+
+:root[data-theme='eco'] .zone-card {
+  background: #f0f6eb !important;
+  border-color: #bfd4b9 !important;
+
+  box-shadow:
+    0 8px 22px rgb(46 91 52 / 9%) !important;
+}
+
+:root[data-theme='eco'] .zone-card:hover {
+  background: #eaf3e5 !important;
+  border-color: #91b792 !important;
+}
+
+:root[data-theme='eco'] .zone-card h3 {
+  color: #214d31 !important;
+}
+
+
+/* =========================================================
+   INNER METRIC BOXES
+   ========================================================= */
+
+:root[data-theme='eco'] .zone-card .metric,
+:root[data-theme='eco'] .zone-card .metric-card,
+:root[data-theme='eco'] .zone-card .reading-card {
+  background: #e5f0e2 !important;
+  border-color: #c1d5bd !important;
+}
+
+
+/* =========================================================
+   PANELS
+   ========================================================= */
+
+:root[data-theme='eco'] .simulation-panel,
+:root[data-theme='eco'] .activity-panel,
+:root[data-theme='eco'] .readings-panel,
+:root[data-theme='eco'] .waste-panel,
+:root[data-theme='eco'] .recommendation-card {
+  background: #edf5e9 !important;
+  border-color: #bfd3ba !important;
+
+  box-shadow:
+    0 8px 22px rgb(46 91 52 / 8%) !important;
+}
+
+
+/* =========================================================
+   DIGITAL TWIN
+   ========================================================= */
+
+:root[data-theme='eco'] .campus-map {
+  background-color: #e5f0e1 !important;
+
+  border-color: #b7cfb3 !important;
+
+  box-shadow:
+    inset 0 0 45px rgb(71 133 76 / 7%),
+    0 10px 25px rgb(46 91 52 / 8%) !important;
+}
+
+:root[data-theme='eco'] .map-walkway {
+  background: #d7e5d2 !important;
+  border-color: #b8cdb4 !important;
+}
+
+:root[data-theme='eco'] .map-green-space {
+  background: rgb(72 137 75 / 18%) !important;
+  border-color: #8eb88f !important;
+}
+
+:root[data-theme='eco'] .map-waterline {
+  background: rgb(75 145 151 / 18%) !important;
+  border-color: #8ebfc0 !important;
+}
+
+:root[data-theme='eco'] .map-building {
+  background: #d9ead6 !important;
+  border-color: #4f965d !important;
+}
+
+:root[data-theme='eco'] .map-building span {
+  background: #b8d6b8 !important;
+  border-color: #75a77a !important;
+}
+
+:root[data-theme='eco'] .map-zone {
+  background: #edf5e9 !important;
+  border-color: #bdd2b9 !important;
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+   ========================================================= */
+
+:root[data-theme='eco'] .primary-button {
+  background: #327648 !important;
+  border-color: #327648 !important;
+  color: white !important;
+
+  box-shadow:
+    0 6px 16px rgb(50 118 72 / 20%) !important;
+}
+
+:root[data-theme='eco'] .primary-button:hover {
+  background: #285f3a !important;
+}
+
+
+/* =========================================================
+   SECONDARY BUTTONS
+   ========================================================= */
+
+:root[data-theme='eco'] button:not(.primary-button) {
+  background: #edf5e9 !important;
+  border-color: #bfd3ba !important;
+  color: #41684b !important;
+}
+
+:root[data-theme='eco'] button:not(.primary-button):hover {
+  background: #dfecdc !important;
+  border-color: #91b591 !important;
+}
+
+
+/* =========================================================
+   SYSTEM STATUS
+   ========================================================= */
+
+:root[data-theme='eco'] .system-status {
+  background: #dcebd8 !important;
+  border-color: #b7d0b3 !important;
+  color: #2c6540 !important;
+}
+:root[data-theme='eco'] .campus-map--eco-twin {
+  background-color: #eef7ed;
+  border-color: #b8d8b5;
+}
+/* =========================================================
+   ECO DIGITAL TWIN
+   ========================================================= */
+
+:root[data-theme='eco'] .campus-map--eco-twin {
+  position: relative;
+  min-height: 500px;
+  overflow: hidden;
+  border: 1px solid #c5dcc2;
+  border-radius: 18px;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 45%,
+      rgb(110 170 105 / 12%),
+      transparent 55%
+    ),
+    #eef7ed;
+
+  box-shadow:
+    inset 0 0 50px rgb(82 135 78 / 6%),
+    0 8px 24px rgb(61 93 58 / 8%);
+}
+
+
+/* Eco map grid */
+
+:root[data-theme='eco'] .campus-map--eco-twin::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    linear-gradient(
+      30deg,
+      transparent 49.5%,
+      rgb(82 135 78 / 7%) 50%,
+      transparent 50.5%
+    ),
+    linear-gradient(
+      -30deg,
+      transparent 49.5%,
+      rgb(82 135 78 / 7%) 50%,
+      transparent 50.5%
+    );
+
+  background-size: 42px 42px;
+
+  pointer-events: none;
+}
+
+
+/* Eco captions */
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-caption {
+  color: #648064;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+
+/* Buildings */
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-building {
+  border-color: #4f8a58;
+  background: #dcebd9;
+
+  box-shadow:
+    0 8px 18px rgb(58 93 55 / 12%),
+    inset 0 0 12px rgb(255 255 255 / 35%);
+}
+
+
+/* Building top */
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-building::before {
+  border-color: #4f8a58;
+  background: #c8dfc5;
+}
+
+
+/* Building side */
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-building::after {
+  border-color: #3f7549;
+  background: #b7d2b4;
+}
+
+
+/* Building floors */
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-building span {
+  background: rgb(63 117 73 / 35%);
+}
+
+
+/* Zone labels */
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-zone__info > strong {
+  color: #244a2b;
+}
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-zone__info > span:last-child {
+  color: #4f7f55;
+}
+
+
+/* Warning building */
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-zone--warning
+  .map-building {
+  border-color: #c38a32;
+  background: #f5e7c7;
+}
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-zone--warning
+  .map-building::before {
+  border-color: #c38a32;
+  background: #ead5a8;
+}
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-zone--warning
+  .map-building::after {
+  border-color: #a96f1f;
+  background: #dfc48d;
+}
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-zone--warning
+  .map-zone__info > span:last-child {
+  color: #a86d1d;
+}
+
+
+/* Critical building */
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-zone--critical
+  .map-building {
+  border-color: #b94d42;
+  background: #f3d8d4;
+
+  box-shadow:
+    0 8px 20px rgb(150 65 55 / 12%);
+}
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-zone--critical
+  .map-building::before {
+  border-color: #b94d42;
+  background: #e7c0bb;
+}
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-zone--critical
+  .map-building::after {
+  border-color: #963c35;
+  background: #d9aaa4;
+}
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-zone--critical
+  .map-zone__info > span:last-child {
+  color: #a64138;
+}
+
+
+/* Scale and road */
+
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-road-label,
+:root[data-theme='eco']
+  .campus-map--eco-twin
+  .map-scale {
+  color: #6a846b;
+}
 }
