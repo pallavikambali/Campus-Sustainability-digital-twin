@@ -71,10 +71,12 @@ source = { editable = "." }
 dependencies = [
     { name = "alembic" },
     { name = "fastapi" },
+    { name = "opencv-python" },
     { name = "pg8000" },
     { name = "pydantic-settings" },
     { name = "python-multipart" },
     { name = "sqlalchemy" },
+    { name = "ultralytics" },
     { name = "uvicorn", extra = ["standard"] },
 ]
 
@@ -97,12 +99,14 @@ requires-dist = [
     { name = "fastapi", specifier = ">=0.115,<1" },
     { name = "httpx", marker = "extra == 'dev'", specifier = ">=0.27,<1" },
     { name = "openai", marker = "extra == 'genai'", specifier = ">=1.68,<3" },
+    { name = "opencv-python", specifier = ">=5.0.0.93" },
     { name = "pg8000", specifier = ">=1.31,<2" },
     { name = "pydantic-settings", specifier = ">=2.6,<3" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3,<9" },
     { name = "python-multipart", specifier = ">=0.0.20,<1" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.8,<1" },
     { name = "sqlalchemy", specifier = ">=2.0,<3" },
+    { name = "ultralytics", specifier = ">=8.4.171" },
     { name = "ultralytics", marker = "extra == 'vision'", specifier = ">=8.3,<9" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.30,<1" },
 ]

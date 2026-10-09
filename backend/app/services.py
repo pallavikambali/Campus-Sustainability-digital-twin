@@ -35,7 +35,7 @@ class ZoneProfile:
 ZONE_PROFILES = {
     "Academic Block": ZoneProfile(Decimal("120.00"), Decimal("4200.00"), 180),
     "Library": ZoneProfile(Decimal("75.00"), Decimal("2400.00"), 90),
-    "Hostel Block": ZoneProfile(Decimal("95.00"), Decimal("5200.00"), 210),
+    "Canteen": ZoneProfile(Decimal("90.00"), Decimal("3000.00"), 120),
 }
 
 
