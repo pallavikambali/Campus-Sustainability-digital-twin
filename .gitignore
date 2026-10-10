@@ -11,3 +11,9 @@ dist/
 backend/storage/
 coverage.xml
 htmlcov/
+# Computer vision datasets and experiment outputs
+datasets/
+runs/
+
+# Pretrained YOLO weights
+backend/yolo11n.pt
