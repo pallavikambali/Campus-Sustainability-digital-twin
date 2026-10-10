@@ -1,4 +1,7 @@
+
 from uuid import UUID
+
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -18,18 +21,29 @@ from app.recommendations.service import (
 
 router = APIRouter(prefix="/api/v1/incidents", tags=["recommendations"])
 
+logger = logging.getLogger(__name__)
+
 
 def get_recommendation_provider() -> RecommendationProvider | None:
     api_key = settings.openai_api_key
+
     if api_key is None or not api_key.get_secret_value().strip():
+        logger.warning(
+            "OpenAI provider unavailable: OPENAI_API_KEY is missing or empty"
+        )
         return None
+
     try:
         return OpenAIRecommendationProvider(
             api_key.get_secret_value(),
             settings.openai_model,
             settings.openai_timeout_seconds,
         )
-    except Exception:
+    except Exception as error:
+        logger.exception(
+            "OpenAI provider initialization failed (%s)",
+            type(error).__name__,
+        )
         return None
 
 
