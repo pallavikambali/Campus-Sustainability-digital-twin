@@ -212,8 +212,8 @@ def generate_recommendation(
     context = build_recommendation_input(incident, zone)
 
     mode = "ai"
-    provider_name = "openai"
-    model_name = settings.openai_model
+    provider_name = "gemini"
+    model_name = settings.gemini_model
     fallback_reason: str | None = None
     try:
         if provider is None:

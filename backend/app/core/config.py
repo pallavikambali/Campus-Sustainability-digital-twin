@@ -21,9 +21,9 @@ class Settings(BaseSettings):
     waste_candidate_classes: str = (
         "bottle,cup,can,plastic bag,paper,cardboard,carton,wrapper,food waste"
     )
-    openai_api_key: SecretStr | None = None
-    openai_model: str = "gpt-4.1-mini"
-    openai_timeout_seconds: float = Field(default=15.0, gt=0, le=120)
+    gemini_api_key: SecretStr | None = None
+    gemini_model: str = "gemini-3.5-flash-lite"
+    gemini_timeout_seconds: float = Field(default=15.0, gt=0, le=120)
 
     model_config = SettingsConfigDict(
         env_file=PROJECT_ROOT / ".env",

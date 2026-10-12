@@ -17,7 +17,7 @@ from app.recommendations.contracts import (
     RecommendationDraft,
     RecommendationInput,
 )
-from app.recommendations.provider import OpenAIRecommendationProvider
+from app.recommendations.provider import GeminiRecommendationProvider
 
 
 class FakeProvider:
@@ -166,8 +166,8 @@ def test_provider_error_uses_fallback_and_does_not_expose_secret(
     client, incident_id = recommendation_client
 
     class FailingProvider:
-        provider_name = "openai"
-        model_name = "gpt-4.1-mini"
+        provider_name = "gemini"
+        model_name = "gemini-2.5-flash"
 
         def generate(self, context: RecommendationInput) -> RecommendationDraft:
             raise RuntimeError("request failed with key sk-test-secret")
@@ -184,7 +184,7 @@ def test_provider_error_uses_fallback_and_does_not_expose_secret(
     "provider_error",
     [
         RuntimeError("401 invalid_api_key sk-test-secret"),
-        TimeoutError("OpenAI request timed out"),
+        TimeoutError("Gemini request timed out"),
     ],
 )
 def test_invalid_credentials_and_timeout_use_fallback(
@@ -194,8 +194,8 @@ def test_invalid_credentials_and_timeout_use_fallback(
     client, incident_id = recommendation_client
 
     class UnavailableProvider:
-        provider_name = "openai"
-        model_name = "gpt-4.1-mini"
+        provider_name = "gemini"
+        model_name = "gemini-2.5-flash"
 
         def generate(self, context: RecommendationInput) -> RecommendationDraft:
             raise provider_error
@@ -214,8 +214,8 @@ def test_malformed_provider_output_uses_fallback(
     client, incident_id = recommendation_client
 
     class MalformedProvider:
-        provider_name = "openai"
-        model_name = "gpt-4.1-mini"
+        provider_name = "gemini"
+        model_name = "gemini-2.5-flash"
 
         def generate(self, context: RecommendationInput) -> dict[str, object]:
             return {
@@ -276,10 +276,12 @@ def test_latest_recommendation_is_null_until_generated(
     assert response.json() is None
 
 
-def test_openai_adapter_uses_structured_response_without_network(
+
+def test_gemini_adapter_parses_structured_response_without_network(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    openai = pytest.importorskip("openai")
+    genai = pytest.importorskip("google.genai")
+    types = pytest.importorskip("google.genai.types")
     context = RecommendationInput(
         incident_id=UUID("00000000-0000-4000-8000-000000000001"),
         incident_type="HIGH_ENERGY_CONSUMPTION",
@@ -301,27 +303,28 @@ def test_openai_adapter_uses_structured_response_without_network(
             )
         ],
     )
-    parse_arguments: dict[str, object] = {}
+    generate_arguments: dict[str, object] = {}
+
+    class FakeModels:
+        def generate_content(self, **kwargs: object) -> object:
+            generate_arguments.update(kwargs)
+            return SimpleNamespace(text=draft.model_dump_json())
 
     class FakeClient:
         def __init__(self, **kwargs: object) -> None:
             assert kwargs["api_key"] == "test-key"
+            self.models = FakeModels()
 
-        class chat:
-            class completions:
-                @staticmethod
-                def parse(**kwargs: object) -> object:
-                    parse_arguments.update(kwargs)
-                    message = SimpleNamespace(refusal=None, parsed=draft)
-                    choice = SimpleNamespace(message=message)
-                    return SimpleNamespace(choices=[choice])
-
-    monkeypatch.setattr(openai, "OpenAI", FakeClient)
-    provider = OpenAIRecommendationProvider("test-key", "gpt-4.1-mini", 5.0)
+    monkeypatch.setattr(genai, "Client", FakeClient)
+    provider = GeminiRecommendationProvider("test-key", "gemini-2.5-flash", 5.0)
 
     result = provider.generate(context)
 
     assert result == draft
-    assert parse_arguments["model"] == "gpt-4.1-mini"
-    assert parse_arguments["response_format"] is RecommendationDraft
-    assert "Do not invent" in parse_arguments["messages"][0]["content"]
+    assert generate_arguments["model"] == "gemini-2.5-flash"
+    config = generate_arguments["config"]
+    assert isinstance(config, types.GenerateContentConfig)
+    assert config.response_mime_type == "application/json"
+    assert isinstance(config.response_schema, dict)
+    assert 'additionalProperties' not in config.response_schema
+    assert "Do not invent" in generate_arguments["contents"]

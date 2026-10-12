@@ -19,35 +19,47 @@ class RecommendationProvider(Protocol):
     def generate(self, context: RecommendationInput) -> RecommendationDraft: ...
 
 
-class OpenAIRecommendationProvider:
-    provider_name = "openai"
+def _gemini_compatible_schema(schema: dict) -> dict:
+    schema.pop('additionalProperties', None)
+    for value in schema.values():
+        if isinstance(value, dict):
+            _gemini_compatible_schema(value)
+        elif isinstance(value, list):
+            for item in value:
+                if isinstance(item, dict):
+                    _gemini_compatible_schema(item)
+    return schema
+
+
+class GeminiRecommendationProvider:
+    provider_name = "gemini"
 
     def __init__(self, api_key: str, model_name: str, timeout_seconds: float) -> None:
-        openai = import_module("openai")
+        genai = import_module("google.genai")
+        types = import_module("google.genai.types")
 
         self.model_name = model_name
-        self._client = openai.OpenAI(
+        self._types = types
+        self._client = genai.Client(
             api_key=api_key,
-            timeout=timeout_seconds,
-            max_retries=0,
+            http_options=types.HttpOptions(timeout=int(timeout_seconds * 1000)),
         )
 
     def generate(self, context: RecommendationInput) -> RecommendationDraft:
-        completion = self._client.chat.completions.parse(
+        response = self._client.models.generate_content(
             model=self.model_name,
-            messages=[
-                {"role": "system", "content": SYSTEM_INSTRUCTIONS},
-                {
-                    "role": "user",
-                    "content": json.dumps(context.model_dump(mode="json")),
-                },
-            ],
-            response_format=RecommendationDraft,
-            max_tokens=800,
+            contents=(
+                SYSTEM_INSTRUCTIONS
+                + "\n\nIncident data (JSON):\n"
+                + json.dumps(context.model_dump(mode="json"))
+            ),
+            config=self._types.GenerateContentConfig(
+                response_mime_type="application/json",
+                response_schema=_gemini_compatible_schema(RecommendationDraft.model_json_schema()),
+                temperature=0.2,
+            ),
         )
-        message = completion.choices[0].message
-        if message.refusal:
-            raise ValueError("The provider refused the recommendation request")
-        if message.parsed is None:
-            raise ValueError("The provider returned no structured recommendation")
-        return message.parsed
+        if not response.text:
+            raise ValueError("Gemini returned no structured recommendation")
+        data = json.loads(response.text)
+        return RecommendationDraft.model_validate(data)

@@ -15,7 +15,7 @@ from app.models import Incident, Zone
 def simulation_client() -> Generator[tuple[TestClient, Session, dict[str, UUID]], None, None]:
     with Session(engine) as lookup_session:
         zone_ids = dict(lookup_session.execute(select(Zone.name, Zone.id)).all())
-    assert {"Academic Block", "Library", "Hostel Block"}.issubset(zone_ids)
+    assert {"Academic Block", "Library", "Canteen"}.issubset(zone_ids)
 
     connection = engine.connect()
     transaction = connection.begin()
@@ -141,7 +141,7 @@ def test_repeated_scenario_updates_existing_active_incident(
     [
         ("Academic Block", "360.00"),
         ("Library", "225.00"),
-        ("Hostel Block", "285.00"),
+        ("Canteen", "270.00"),
     ],
 )
 def test_energy_scenarios_are_deterministic_for_each_zone(

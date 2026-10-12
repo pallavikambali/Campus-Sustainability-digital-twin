@@ -1,7 +1,6 @@
 
-from uuid import UUID
-
 import logging
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -10,7 +9,7 @@ from app.core.config import settings
 from app.db import get_session
 from app.recommendations.contracts import RecommendationResponse
 from app.recommendations.provider import (
-    OpenAIRecommendationProvider,
+    GeminiRecommendationProvider,
     RecommendationProvider,
 )
 from app.recommendations.service import (
@@ -25,23 +24,23 @@ logger = logging.getLogger(__name__)
 
 
 def get_recommendation_provider() -> RecommendationProvider | None:
-    api_key = settings.openai_api_key
+    api_key = settings.gemini_api_key
 
     if api_key is None or not api_key.get_secret_value().strip():
         logger.warning(
-            "OpenAI provider unavailable: OPENAI_API_KEY is missing or empty"
+            "Gemini provider unavailable: GEMINI_API_KEY is missing or empty"
         )
         return None
 
     try:
-        return OpenAIRecommendationProvider(
+        return GeminiRecommendationProvider(
             api_key.get_secret_value(),
-            settings.openai_model,
-            settings.openai_timeout_seconds,
+            settings.gemini_model,
+            settings.gemini_timeout_seconds,
         )
     except Exception as error:
         logger.exception(
-            "OpenAI provider initialization failed (%s)",
+            "Gemini provider initialization failed (%s)",
             type(error).__name__,
         )
         return None

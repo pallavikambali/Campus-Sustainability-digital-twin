@@ -1,13 +1,12 @@
+import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy import inspect, select
 from sqlalchemy.exc import IntegrityError, ProgrammingError
 from sqlalchemy.orm import Session
-from fastapi.testclient import TestClient
-import pytest
 
 from app.db import engine
 from app.main import app
 from app.models import SensorReading, Zone
-
 
 client = TestClient(app)
 
@@ -34,7 +33,7 @@ def test_initial_schema_and_seeded_zones() -> None:
     with Session(engine) as session:
         zone_names = set(session.scalars(select(Zone.name)))
 
-    assert {"Academic Block", "Library", "Hostel Block"}.issubset(zone_names)
+    assert {"Academic Block", "Library", "Canteen"}.issubset(zone_names)
 
 
 def test_sensor_reading_rejects_negative_values() -> None:
