@@ -1,0 +1,246 @@
+DSU Code Clash 2.0 — Production-Quality Implementation Prompt
+
+Project: Campus Sustainability Digital Twin
+Deployment: https://campus-sustainability-digital-twin.vercel.app/
+
+My responsibility is Member 4: Digital Twin Dashboard, What-if Simulator and Incident Verification.
+
+CRITICAL REQUIREMENT
+
+Every feature must actually work. Do not create a UI-only demonstration, fake interactions, hardcoded success messages, or buttons that do nothing.
+
+Before coding, inspect the complete existing codebase, frontend, backend, database, API endpoints, and deployment configuration. Preserve all existing working functionality.
+
+Do not assume any framework, file name, database, API, or schema before inspecting the project.
+
+PHASE 1 — INSPECT THE EXISTING PROJECT
+
+1. Identify the frontend and backend frameworks.
+2. Identify the database and existing data models.
+3. Inspect DigitalTwin, ZoneCard, IncidentList and SimulationControls, if present.
+4. Inspect the current API routes, thresholds, resource calculations and incident detection logic.
+5. Identify existing features that already work and reuse them.
+6. Identify missing functionality and integration problems.
+7. Report the findings briefly, then proceed with implementation without unnecessarily waiting for approval.
+
+Do not delete working code or replace the existing application with a new template.
+
+PHASE 2 — FUNCTIONAL DIGITAL TWIN
+
+Build an interactive 2D campus representation using actual campus zones already available in the database or backend.
+
+Requirements:
+
+- Each zone must be clickable.
+- Show energy, water, occupancy and waste readings for the selected zone.
+- Calculate zone status using the actual configured thresholds.
+- Green means normal, yellow means warning, red means critical.
+- Provide status filters and a clear colour legend.
+- Refresh the display from backend data.
+- Display a timestamp indicating when the readings were last updated.
+- Handle missing readings without inventing measurements.
+- If the backend is unavailable, show a visible error instead of silently displaying fake live data.
+
+Selecting a zone must show its details. Filters must change the visible zones. Status indicators must reflect the actual readings and configured thresholds.
+
+PHASE 3 — FUNCTIONAL WHAT-IF SIMULATOR
+
+Implement a working simulator with inputs for:
+
+- Energy reduction percentage.
+- Water reduction percentage.
+- Occupancy change.
+- Waste reduction percentage.
+- Optional sustainability interventions supported by the project.
+
+Every input change must update the results using real calculations.
+
+Required outputs:
+
+- Baseline consumption.
+- Projected consumption.
+- Energy saved in kWh.
+- Water saved in litres.
+- Waste reduction with clearly defined units.
+- Estimated cost savings in ₹.
+- Estimated CO2 emissions reduction.
+- Before-and-after charts.
+- Changes in predicted zone status and alerts.
+
+Implementation rules:
+
+1. Use actual baseline readings from the backend.
+2. Validate inputs and reject invalid values.
+3. Prevent negative consumption and unrealistic percentages.
+4. Use configurable tariffs and emissions factors.
+5. Display assumptions and calculation units.
+6. Use one consistent calculation method across cards and charts.
+7. Keep simulations separate from actual measurements.
+8. Do not send simulation values to production readings or overwrite database records.
+9. Reset must restore the original baseline.
+10. If a baseline is unavailable, disable calculations and explain what data is missing.
+
+Implement and test the calculation functions rather than using arbitrary numbers or random results.
+
+PHASE 4 — COMPLETE INCIDENT LIFECYCLE
+
+Implement this exact workflow:
+
+Detection → Recommended Action → Action Addressed → Verification → Resolved or Reopened.
+
+Each incident should have:
+
+- Unique ID.
+- Zone ID.
+- Resource or metric.
+- Observed reading.
+- Configured threshold.
+- Severity.
+- Recommended action.
+- Creation timestamp.
+- Current lifecycle status.
+- Action and verification timestamps where appropriate.
+
+Functional requirements:
+
+1. Detect abnormal readings using existing backend rules.
+2. Persist new incidents in the existing database.
+3. Prevent duplicate active incidents for the same ongoing condition.
+4. Allow an authorised user to mark an action as addressed.
+5. Verify the latest available reading against the configured threshold.
+6. Resolve an incident only when the latest valid reading satisfies the recovery rule.
+7. If the condition remains abnormal, keep the incident unresolved and explain why.
+8. If a previously resolved condition becomes abnormal again, create or reopen an incident according to the existing incident policy.
+9. Maintain an incident history.
+10. Show accurate status changes in the interface after successful API responses.
+11. Handle repeated requests safely and prevent accidental duplicate records.
+
+Do not treat clicking the Addressed button as proof that the problem has been fixed. Do not mark an incident resolved merely because the user clicked Verify. Verification must use actual stored readings or explicitly identified simulated readings from the existing simulator.
+
+If there is no new reading available, show “Unable to verify: no current reading available.”
+
+PHASE 5 — REAL BACKEND AND DATABASE INTEGRATION
+
+Inspect the current backend before adding endpoints.
+
+Every displayed value must have a defined source:
+
+- Existing database record.
+- Existing backend calculation.
+- Clearly labelled scenario simulation.
+
+Requirements:
+
+- Use existing APIs wherever possible.
+- Add missing API endpoints using the existing backend framework.
+- Validate requests on the server.
+- Use appropriate HTTP status codes.
+- Handle missing records and database errors.
+- Persist incident changes in the database.
+- Use database migrations when schema changes are necessary.
+- Keep secrets in environment variables.
+- Never report success before a database operation succeeds.
+- Never use localStorage as a substitute for required server-side persistence.
+- Never create a separate mock backend that bypasses the real application.
+
+If the current architecture does not support a requested feature, implement the smallest compatible change and explain any required configuration.
+
+PHASE 6 — IMPACT CALCULATIONS
+
+Use consistent, documented formulas.
+
+Energy savings = Baseline energy − Projected energy.
+
+Water savings = Baseline water − Projected water.
+
+Estimated cost savings = Energy savings × configured electricity tariff + Water savings × configured water tariff.
+
+Estimated CO2 reduction must use documented, configurable emissions factors and consistent units.
+
+Waste reduction must compare the baseline and projected quantities using the same unit.
+
+Do not mix instantaneous power in kW with energy in kWh. Account for the measurement period when necessary.
+
+Do not invent measured savings, carbon reductions, tariffs or campus statistics. Label projections as estimates and show the assumptions used.
+
+PHASE 7 — UI AND RESPONSIVENESS
+
+Create a polished, colourful and professional sustainability dashboard without sacrificing correctness.
+
+Include:
+
+- Interactive campus map.
+- Summary metric cards.
+- Zone-level details.
+- Charts with correct units.
+- Working simulator controls.
+- Incident table with functional lifecycle actions.
+- Loading indicators.
+- Empty states.
+- API and database error messages.
+- Mobile, tablet and desktop layouts.
+
+Every visible control must work. Remove or clearly disable unfinished actions. Ensure charts, summary cards, map indicators and incident statuses use consistent data.
+
+PHASE 8 — AUTOMATED TESTING AND MANUAL VERIFICATION
+
+Add tests appropriate to the existing framework.
+
+Test at least these cases:
+
+DIGITAL TWIN
+
+- Normal readings produce normal status.
+- Warning readings produce warning status.
+- Critical readings produce critical status.
+- Missing readings do not produce fabricated values.
+- Zone filters return the correct zones.
+
+SIMULATOR
+
+- Zero reduction leaves the baseline unchanged.
+- A valid reduction produces the expected projected value.
+- Invalid percentages are rejected.
+- Reset restores the baseline.
+- Simulation never overwrites actual readings.
+- Cost and CO2 calculations use the configured factors.
+
+INCIDENTS
+
+- Abnormal readings create incidents.
+- Repeated detection does not create duplicate active incidents.
+- Addressed incidents are not automatically resolved.
+- Normal current readings permit successful verification.
+- Abnormal readings prevent resolution.
+- Missing readings prevent false verification.
+- Incident changes persist after page refresh.
+
+INTEGRATION
+
+- API errors are handled correctly.
+- Database failures do not produce false success messages.
+- Existing features continue working.
+- The production build completes successfully.
+- Mobile layouts have no major overflow or broken controls.
+
+Run the available tests, fix the errors and report the actual results. Never claim a test passed unless it was executed successfully.
+
+PHASE 9 — FINAL DEPLOYMENT
+
+Preserve the existing deployment configuration.
+
+After implementation:
+
+1. Run the project build and tests.
+2. Fix any errors introduced by the changes.
+3. Apply necessary database migrations safely.
+4. List required environment variables without exposing secret values.
+5. Explain any manual deployment steps.
+6. Confirm which features have been tested.
+7. Clearly list any remaining limitations.
+
+FINAL ACCEPTANCE CRITERION:
+
+The project is complete only when the digital twin reflects backend readings, the simulator produces consistent calculations, incident verification checks actual readings, database changes persist, and the application builds successfully.
+
+Do not claim complete success if any of these conditions remain unverified.
