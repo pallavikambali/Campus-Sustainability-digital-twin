@@ -23,8 +23,8 @@ class Settings(BaseSettings):
     )
     gemini_api_key: SecretStr | None = None
     gemini_model: str = "gemini-3.5-flash-lite"
-    gemini_timeout_seconds: float = Field(default=15.0, gt=0, le=120)
-
+    gemini_timeout_seconds: float = Field(default=60.0, gt=0, le=120)
+    
     model_config = SettingsConfigDict(
         env_file=PROJECT_ROOT / ".env",
         env_file_encoding="utf-8",
