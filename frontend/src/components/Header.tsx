@@ -13,9 +13,16 @@ const SYSTEM_LABELS: Record<SystemState, string> = {
 
 export function Header({ systemState, lastUpdated }: HeaderProps) {
   return (
-    <header className="topbar">
-      <a className="brand" href="#overview" aria-label="Campus Sustainability Digital Twin home">
-        <span className="brand-mark" aria-hidden="true"><i /><i /><i /><i /></span>
+    <aside className="sidebar">
+      <a
+        className="brand"
+        href="#overview"
+        aria-label="Campus Sustainability Digital Twin home"
+      >
+        <span className="brand-mark" aria-hidden="true">
+          <i /><i /><i /><i />
+        </span>
+
         <span className="brand-copy">
           <strong>Campus Twin</strong>
           <span>Sustainability operations</span>
@@ -23,6 +30,7 @@ export function Header({ systemState, lastUpdated }: HeaderProps) {
       </a>
 
       <nav className="top-navigation" aria-label="Dashboard sections">
+        <a href="#overview">Overview</a>
         <a href="#zones">Zones</a>
         <a href="#digital-twin">Digital twin</a>
         <a href="#waste-detection">Waste CV</a>
@@ -33,12 +41,16 @@ export function Header({ systemState, lastUpdated }: HeaderProps) {
       <div className={`system-indicator system-indicator--${systemState}`}>
         <span className="system-indicator__dot" aria-hidden="true" />
         <span>{SYSTEM_LABELS[systemState]}</span>
+
         {lastUpdated && (
           <time>
-            {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            {lastUpdated.toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
           </time>
         )}
       </div>
-    </header>
+    </aside>
   );
 }

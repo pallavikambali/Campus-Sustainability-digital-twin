@@ -3824,3 +3824,107 @@ body {
   color: #6a846b;
 }
 }
+
+/* ---------- LEFT SIDEBAR LAYOUT ---------- */
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 20;
+  display: flex;
+  width: 250px;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1.6rem 1.2rem;
+  overflow-y: auto;
+  border-right: 1px solid var(--app-border, #dce5dc);
+  background: var(--app-surface, #f8faf7);
+}
+
+.sidebar .brand {
+  margin-bottom: 0.5rem;
+}
+
+.sidebar .top-navigation {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.45rem;
+}
+
+.sidebar .top-navigation a {
+  display: block;
+  padding: 0.8rem 0.9rem;
+  border-radius: 7px;
+}
+
+.sidebar .top-navigation a:hover {
+  background: rgb(73 130 97 / 10%);
+}
+
+.sidebar .top-navigation a:first-child {
+  background: rgb(73 130 97 / 12%);
+}
+
+.sidebar .top-navigation a:first-child::after {
+  display: none;
+}
+
+.sidebar .system-indicator {
+  align-self: stretch;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  white-space: normal;
+  margin-top: auto;
+}
+
+.dashboard-content {
+  min-width: 0;
+  margin-left: 250px;
+}
+
+.dashboard-main {
+  width: min(100% - 3rem, 1440px);
+  margin: 0 auto;
+  padding: 2.5rem 0 3rem;
+}
+
+/* ---------- RESPONSIVE SIDEBAR ---------- */
+
+@media (max-width: 760px) {
+  .sidebar {
+    position: relative;
+    width: 100%;
+    gap: 1rem;
+    padding: 1rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--app-border, #dce5dc);
+  }
+
+  .sidebar .top-navigation {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .sidebar .top-navigation a {
+    padding: 0.6rem;
+  }
+
+  .sidebar .system-indicator {
+    margin-top: 0;
+  }
+
+  .dashboard-content {
+    margin-left: 0;
+  }
+
+  .dashboard-main {
+    width: calc(100% - 2rem);
+    padding-top: 1.5rem;
+  }
+}

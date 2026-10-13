@@ -74,10 +74,12 @@ function App() {
     (left, right) => ZONE_ORDER.indexOf(left.name) - ZONE_ORDER.indexOf(right.name),
   );
 
-  return (
+  return(
     <div className="app-shell">
-      <Header systemState={systemState} lastUpdated={lastUpdated} />
-      <main className="dashboard-main">
+  <Header systemState={systemState} lastUpdated={lastUpdated} />
+
+  <div className="dashboard-content">
+    <main className="dashboard-main">
         <div className="page-heading" id="overview">
           <div>
             <p className="eyebrow">Campus operations / Live overview</p>
@@ -198,9 +200,10 @@ function App() {
             </button>
           </div>
         ) : null}
-      </main>
+            </main>
     </div>
-  );
+  </div>
+);
 }
 
 export default App;
