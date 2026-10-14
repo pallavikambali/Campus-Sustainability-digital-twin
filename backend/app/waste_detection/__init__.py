@@ -1,1 +1,0 @@
-"""Computer-vision waste detection adapters and services."""
