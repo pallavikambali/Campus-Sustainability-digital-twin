@@ -1,0 +1,255 @@
+# CONTINUE AND UPGRADE MY EXISTING CAMPUS SUSTAINABILITY DIGITAL TWIN
+
+I am Member 4 of this project. My responsibility is the React frontend, interactive digital twin dashboard, What-if Simulator, incident visibility, and frontend-backend integration.
+
+Existing deployed website: https://campus-sustainability-digital-twin.vercel.app/
+
+Our project already has a React frontend and FastAPI backend, including a campus map, zone cards, readings, operational simulations, incidents, waste-detection foundations, and GenAI recommendations.
+
+I want to continue from the existing code and make the website look professional, modern, impressive, interactive, and genuinely functional.
+
+## IMPORTANT RULES
+
+1. Inspect the existing project structure, components, APIs, database, and installed packages before changing anything.
+2. Do not create a new project or rebuild the application.
+3. Preserve all existing working features and the current backend architecture.
+4. Do not break existing routes, APIs, simulations, waste detection, recommendations, or database records.
+5. Use real backend data. Never invent readings, incidents, historical data, successful notifications, or environmental savings.
+6. Do not remove working features just to simplify implementation.
+7. Implement the changes in stages and run available checks after each major stage.
+8. Keep the website responsive and usable on desktop, tablet, and mobile.
+9. Prioritize functionality, visual quality, and reliable data over unnecessary decoration.
+10. If a feature needs backend work, implement it safely in the existing FastAPI application when feasible. Clearly identify any external setup that I must complete myself.
+
+## 1. PROFESSIONAL DASHBOARD
+
+Upgrade the existing dashboard into a campus sustainability control center.
+
+Include:
+- A professional header and navigation.
+- Summary cards for energy, water, occupancy, and active incidents.
+- The existing campus map with selectable Canteen, Academic Block, and Library zones.
+- Consistent Normal, Warning, and Critical indicators.
+- Energy and water trend charts when real historical readings are available.
+- A zone comparison bar chart.
+- An energy or water distribution donut chart.
+- Incident summaries and a chronological timeline.
+- A visible last-updated timestamp and data freshness indicator.
+- Loading, empty, error, and retry states.
+
+Use a consistent sustainability theme, clean typography, appropriate spacing, subtle transitions, readable labels, and a polished layout.
+
+Do not use fake historical data to fill empty charts. If historical readings are unavailable, explain that limitation and continue displaying useful comparisons supported by current data.
+
+## 2. INTERACTIVE CAMPUS DIGITAL TWIN
+
+Improve the existing 2D campus map instead of replacing it.
+
+When a user selects a zone:
+- Highlight the selected building.
+- Open a zone details panel.
+- Show available energy, water, and occupancy readings.
+- Display the zone's actual status and active incidents.
+- Show relevant waste-detection information and recommendations when available.
+- Provide zone-specific comparisons or charts where data supports them.
+
+Keep map status indicators, zone cards, summary counts, and details synchronized with the same backend data.
+
+Show unavailable or stale information clearly. Do not create fake buildings or sensor readings.
+
+## 3. ADVANCED WHAT-IF SIMULATOR
+
+Make the existing What-if Simulator genuinely interactive.
+
+Provide:
+- Zone selection.
+- Hypothetical energy consumption input.
+- Hypothetical water consumption input.
+- Hypothetical occupancy input.
+- Simulation duration only if supported by the existing data model.
+
+Display:
+- Current baseline values.
+- Proposed values.
+- Absolute differences.
+- Percentage changes when mathematically valid.
+- Before-and-after comparison graphs.
+- Occupancy capacity warnings using actual backend-provided capacity data.
+- Predicted status only when supported by real backend rules.
+
+Update comparison graphs and calculations immediately when inputs change.
+
+Use separate charts or appropriate scales for energy, water, and occupancy because they use different units.
+
+Provide Preview Scenario and Reset controls.
+
+The preview must remain local and must not modify saved readings, incidents, or operational state. Clearly label hypothetical values.
+
+Keep Preview Scenario separate from Apply Simulation. Use Apply only if the existing backend supports the operation. Never show a fake success message.
+
+Do not invent cost savings, CO2 reductions, thresholds, or environmental impact estimates. Display these only if documented calculation factors and valid inputs exist.
+
+## 4. CRITICAL INCIDENT NOTIFICATION SYSTEM
+
+Add an incident notification feature so that the system can alert the responsible person when an actual zone or incident becomes Critical.
+
+### Email notifications
+
+- Integrate email sending through the FastAPI backend using a service such as Resend or a properly configured SMTP provider.
+- Send alerts only for real critical conditions reported by the existing backend.
+- Include incident type, affected zone, severity, available readings, and the actual detection timestamp.
+- Keep credentials in backend environment variables or deployment secrets.
+- Never expose email API keys in React code or public repositories.
+- Show notification delivery status and errors honestly.
+
+### WhatsApp notifications
+
+- Design an optional integration using Meta's official WhatsApp Cloud API.
+- Store tokens, phone number ID, and recipient configuration securely on the backend.
+- Follow applicable WhatsApp template and messaging requirements.
+- If credentials are missing, show that WhatsApp is not configured.
+- Never pretend a WhatsApp message has been sent without confirmation from the provider.
+
+### Notification center
+
+Add a dashboard panel that shows:
+- Incident and affected zone.
+- Severity.
+- Notification channel.
+- Time of notification attempt.
+- Delivery status.
+- Error information when delivery fails.
+
+Prevent duplicate alerts when the dashboard refreshes or the backend polls the same incident repeatedly. Use persistent backend notification records and a reliable deduplication strategy.
+
+Allow authorized users to enable or disable channels and configure recipients securely.
+
+Provide a test notification function where practical, with clear confirmation that distinguishes a successful provider response from a delivery failure.
+
+Do not send notifications for hypothetical What-if previews.
+
+Implement email first. Make WhatsApp optional until the necessary credentials and setup are available. Do not expose secrets or claim real delivery until it has been tested.
+
+## 5. INCIDENT INVESTIGATION AND RECOVERY VISIBILITY
+
+Improve the incident detail panel.
+
+Show the available:
+- Incident type.
+- Affected zone.
+- Status and severity.
+- Detection timestamp.
+- Related sensor readings.
+- Event history.
+- Recommended action.
+- Recovery readings, if the backend records them.
+
+Keep the existing ACTIVE and RESOLVED status model unless the backend is deliberately extended.
+
+Do not add fake Addressed or Verified buttons.
+
+If genuine incident recovery verification requires new backend support, document the missing API and data requirements before implementing the workflow.
+
+## 6. SUSTAINABILITY PERFORMANCE AND REPORTS
+
+Add a sustainability performance section using valid available measurements.
+
+Compare zones using energy consumption, water consumption, occupancy relative to capacity, and incident counts where available.
+
+Do not invent an overall sustainability score. If a score is implemented, provide a transparent and defensible formula.
+
+Add a downloadable report if feasible with the existing architecture.
+
+Include available readings, zone comparisons, incident summaries, and What-if results. Clearly separate actual measurements from hypothetical estimates. Include the reporting period and data coverage.
+
+Allow CSV export for filtered readings or incident lists where supported.
+
+Do not report unsupported financial savings or CO2 reductions.
+
+## 7. VISUAL QUALITY
+
+Make the application look like a polished professional smart-campus platform.
+
+Requirements:
+- Clear dashboard hierarchy.
+- Consistent cards, typography, colors, and spacing.
+- Carefully designed charts and legends.
+- Consistent status colors for Normal, Warning, and Critical.
+- Smooth but subtle interactions.
+- Useful empty states instead of blank sections.
+- Clear form validation and error messages.
+- Responsive navigation and layouts.
+- Accessible labels and readable text.
+- Avoid excessive gradients, unnecessary animations, overcrowding, and decorative elements that do not help the user.
+
+Preserve the existing visual identity where possible. Improve the current application rather than replacing it with an unrelated design.
+
+## 8. BACKEND AND API INTEGRATION
+
+Inspect existing API endpoints before adding new ones.
+
+- Reuse existing API service functions.
+- Keep data processing and notification sending on the backend where appropriate.
+- Validate all user inputs.
+- Handle timeouts, API failures, and missing values.
+- Avoid duplicate requests and excessive polling.
+- Persist notification history if the current database architecture supports it.
+- Protect notification settings and recipient configuration from unauthorized changes.
+- Never commit secrets or credentials.
+- Do not change shared anomaly detection or simulation rules without documenting the changes and coordinating with the relevant team member.
+
+If backend changes or database migrations are required, make them backward-compatible where possible and document them.
+
+## 9. TEST THE EXISTING AND NEW FEATURES
+
+After implementation:
+- Run the frontend production build and available backend checks.
+- Test the dashboard with valid, missing, and unavailable data.
+- Test switching between all three zones.
+- Verify that charts match actual API responses.
+- Verify What-if graphs update when inputs change.
+- Confirm preview and reset do not modify stored readings or incidents.
+- Test existing operational simulations.
+- Test incident display after reloading the page.
+- Test email integration using the configured provider.
+- Test duplicate-notification prevention.
+- Test missing credentials and provider failures.
+- Test WhatsApp only if valid credentials are configured.
+- Test responsive layouts.
+- Check browser and backend errors.
+- Confirm existing waste detection and recommendations still work.
+
+Do not claim a test passed unless it actually ran successfully. Do not claim the deployed website has changed unless deployment was completed.
+
+## 10. IMPLEMENTATION ORDER
+
+Work in this order:
+
+Stage 1: Inspect the project and improve the existing dashboard and interactive campus map.
+
+Stage 2: Complete the What-if Simulator with working calculations, comparisons, and graphs.
+
+Stage 3: Improve incident visibility and implement reliable email notifications.
+
+Stage 4: Add optional WhatsApp integration and notification settings.
+
+Stage 5: Improve reporting, exports, and sustainability performance comparisons.
+
+Stage 6: Run tests, fix regressions, and verify the application.
+
+Do not attempt a risky full rewrite. Keep changes focused, incremental, and compatible with the current project.
+
+## FINAL RESPONSE REQUIRED
+
+When finished, report:
+1. What was implemented.
+2. Every file created or modified.
+3. Which existing APIs were reused and which new APIs were added.
+4. Which features were actually tested.
+5. Any failed or untested checks.
+6. Required environment variables and external service setup.
+7. Any remaining backend or data limitations.
+8. Exact steps to run and verify the website.
+9. Deployment status, only if deployment was actually performed.
+
+Start by inspecting the existing codebase and then implement Stage 1. Continue through the remaining stages only when the current changes are stable. Do not stop after producing a plan if implementation is possible.

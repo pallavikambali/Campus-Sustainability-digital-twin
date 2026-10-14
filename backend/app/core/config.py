@@ -24,7 +24,16 @@ class Settings(BaseSettings):
     gemini_api_key: SecretStr | None = None
     gemini_model: str = "gemini-3.5-flash-lite"
     gemini_timeout_seconds: float = Field(default=60.0, gt=0, le=120)
-    
+    email_alerts_enabled: bool = False
+    smtp_host: str | None = None
+    smtp_port: int = Field(default=587, ge=1, le=65535)
+    smtp_username: str | None = None
+    smtp_password: SecretStr | None = None
+    smtp_use_tls: bool = True
+    smtp_use_ssl: bool = False
+    smtp_from_email: str | None = None
+    critical_alert_recipient: str | None = None
+
     model_config = SettingsConfigDict(
         env_file=PROJECT_ROOT / ".env",
         env_file_encoding="utf-8",
@@ -46,6 +55,15 @@ class Settings(BaseSettings):
     @property
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+
+    @property
+    def email_alerts_configured(self) -> bool:
+        return bool(
+            self.email_alerts_enabled
+            and self.smtp_host
+            and self.smtp_from_email
+            and self.critical_alert_recipient
+        )
 
 
 settings = Settings()

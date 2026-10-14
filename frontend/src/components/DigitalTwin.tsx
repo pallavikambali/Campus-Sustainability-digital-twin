@@ -2,11 +2,11 @@ import type { ZoneSummary } from '../api/types';
 import { StatusPill } from './StatusPill';
 import { useTheme } from '../ThemeContext';
 
-const MAP_POSITIONS = [
-  'map-zone--academic',
-  'map-zone--library',
-  'map-zone--hostel',
-];
+const MAP_POSITIONS: Record<string, string> = {
+  'Academic Block': 'map-zone--academic',
+  Library: 'map-zone--library',
+  Canteen: 'map-zone--canteen',
+};
 
 function formatReading(value: number | string | undefined, unit: string) {
   return value === undefined
@@ -16,7 +16,15 @@ function formatReading(value: number | string | undefined, unit: string) {
       })} ${unit}`;
 }
 
-export function DigitalTwin({ zones }: { zones: ZoneSummary[] }) {
+export function DigitalTwin({
+  zones,
+  selectedZoneId,
+  onSelectZone,
+}: {
+  zones: ZoneSummary[];
+  selectedZoneId: string;
+  onSelectZone: (zoneId: string) => void;
+}) {
   const { theme } = useTheme();
   return (
     <section className="content-section twin-section" id="digital-twin">
@@ -72,12 +80,16 @@ export function DigitalTwin({ zones }: { zones: ZoneSummary[] }) {
           CAMPUS LOOP
         </div>
 
-        {zones.map((zone, index) => (
-          <article
+        {zones.filter((zone) => MAP_POSITIONS[zone.name]).map((zone) => (
+          <button
             key={zone.id}
-            className={`map-zone ${
-              MAP_POSITIONS[index] ?? ''
-            } map-zone--${zone.status.toLowerCase()}`}
+            type="button"
+            aria-pressed={selectedZoneId === zone.id}
+            aria-label={`Select ${zone.name}, ${zone.status.toLowerCase()}, ${zone.active_incident_count} active incidents`}
+            onClick={() => onSelectZone(zone.id)}
+            className={`map-zone ${MAP_POSITIONS[zone.name]} map-zone--${zone.status.toLowerCase()} ${
+              selectedZoneId === zone.id ? 'map-zone--selected' : ''
+            }`}
           >
             <div className="map-building" aria-hidden="true">
               <span />
@@ -103,7 +115,7 @@ export function DigitalTwin({ zones }: { zones: ZoneSummary[] }) {
                 {zone.active_incident_count} active
               </span>
             </div>
-          </article>
+          </button>
         ))}
 
         <div className="map-scale">
@@ -112,8 +124,8 @@ export function DigitalTwin({ zones }: { zones: ZoneSummary[] }) {
       </div>
 
       <p className="map-footnote">
-        Zone conditions update with the latest sensor readings from
-        PostgreSQL.
+        Map markers represent monitored locations returned by the API. Select a
+        location to update the shared zone details.
       </p>
     </section>
   );

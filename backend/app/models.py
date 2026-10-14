@@ -164,6 +164,43 @@ class Recommendation(Base):
     )
 
 
+class NotificationDelivery(Base):
+    __tablename__ = "notification_deliveries"
+    __table_args__ = (
+        UniqueConstraint(
+            "incident_id",
+            "channel",
+            name="uq_notification_deliveries_incident_channel",
+        ),
+        CheckConstraint(
+            "channel IN ('EMAIL')",
+            name="ck_notification_deliveries_channel",
+        ),
+        CheckConstraint(
+            "status IN ('ACCEPTED', 'FAILED')",
+            name="ck_notification_deliveries_status",
+        ),
+        Index("ix_notification_deliveries_attempted_at", "attempted_at"),
+    )
+
+    id: Mapped[UUID] = mapped_column(
+        PostgreSQLUUID(as_uuid=True),
+        primary_key=True,
+        server_default=text("gen_random_uuid()"),
+    )
+    incident_id: Mapped[UUID] = mapped_column(
+        PostgreSQLUUID(as_uuid=True),
+        ForeignKey("incidents.id", ondelete="RESTRICT"),
+        nullable=False,
+    )
+    channel: Mapped[str] = mapped_column(String(20), nullable=False)
+    status: Mapped[str] = mapped_column(String(20), nullable=False)
+    error: Mapped[str | None] = mapped_column(Text)
+    attempted_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+
+
 class Report(Base):
     __tablename__ = "reports"
     __table_args__ = (

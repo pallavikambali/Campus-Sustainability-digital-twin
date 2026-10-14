@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.db import get_session
+from app.notifications import notify_critical_zone
 from app.schemas import SimulationResponse
 from app.services import (
     Scenario,
@@ -24,7 +25,10 @@ def _run(
 ) -> SimulationResponse:
     try:
         with session.begin():
-            return action(session, zone_id)
+            response = action(session, zone_id)
+        if response.zone_status == "CRITICAL":
+            notify_critical_zone(session, zone_id)
+        return response
     except ZoneNotFoundError as error:
         raise HTTPException(status_code=404, detail="Zone not found") from error
     except UnsupportedZoneError as error:

@@ -28,6 +28,7 @@ export function SimulationControls({
           disabled={busy}
           onClick={() => onSimulate(action)}
           title={label}
+          aria-label={`${label} for this zone`}
         >
           <span className="simulation-button__marker" aria-hidden="true">
             {pendingAction === action ? <span className="mini-spinner" /> : marker}

@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.db import get_session
+from app.notifications import notify_critical_zone
 from app.schemas import WasteDetectionListItemResponse, WasteDetectionResultResponse
 from app.services import ZoneNotFoundError
 from app.waste_detection import repository
@@ -48,9 +49,12 @@ def create_waste_detection(
 
     try:
         with session.begin():
-            return analyze_waste_image(
+            result = analyze_waste_image(
                 session, zone_id, contents, extension, detector=detector
             )
+        if result.zone_status == "CRITICAL":
+            notify_critical_zone(session, zone_id)
+        return result
     except ZoneNotFoundError as error:
         raise HTTPException(status_code=404, detail="Zone not found") from error
 

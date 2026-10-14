@@ -7,20 +7,34 @@ interface ZoneCardProps {
   pendingAction: SimulationAction | null;
   controlsDisabled: boolean;
   onSimulate: (action: SimulationAction) => void;
+  isSelected?: boolean;
+  onSelect?: () => void;
 }
 
 function displayValue(value: number | string | undefined, unit: string) {
-  if (value === undefined) return '--';
-  return `${Number(value).toLocaleString(undefined, { maximumFractionDigits: 1 })} ${unit}`;
+  if (value === undefined || value === '') return 'Unavailable';
+  const parsed = Number(value);
+  return Number.isFinite(parsed)
+    ? `${parsed.toLocaleString(undefined, { maximumFractionDigits: 1 })} ${unit}`
+    : 'Unavailable';
 }
 
-export function ZoneCard({ zone, pendingAction, controlsDisabled, onSimulate }: ZoneCardProps) {
+export function ZoneCard({
+  zone,
+  pendingAction,
+  controlsDisabled,
+  onSimulate,
+  isSelected = false,
+  onSelect,
+}: ZoneCardProps) {
   const reading = zone.latest_reading;
   const occupancy = reading?.occupancy ?? null;
-  const occupancyRatio = occupancy === null ? 0 : Math.min(100, (occupancy / zone.capacity) * 100);
+  const occupancyRatio = occupancy === null || zone.capacity <= 0
+    ? null
+    : Math.min(100, (occupancy / zone.capacity) * 100);
 
   return (
-    <article className={`zone-card zone-card--${zone.status.toLowerCase()}`}>
+    <article className={`zone-card zone-card--${zone.status.toLowerCase()} ${isSelected ? 'zone-card--selected' : ''}`}>
       <div className="zone-card__header">
         <div>
           <span className="zone-card__type">{zone.type.replaceAll('_', ' ')}</span>
@@ -44,23 +58,23 @@ export function ZoneCard({ zone, pendingAction, controlsDisabled, onSimulate }: 
         <div>
           <span className="zone-metric__label">Occupancy</span>
           <strong>
-            {occupancy === null ? '--' : occupancy.toLocaleString()} <span>/ {zone.capacity}</span>
+            {occupancy === null ? 'Unavailable' : <>{occupancy.toLocaleString()} <span>/ {zone.capacity}</span></>}
           </strong>
         </div>
         <span className="occupancy-percent">
-          {occupancy === null ? 'No reading' : `${Math.round((occupancy / zone.capacity) * 100)}%`}
+          {occupancy === null || zone.capacity <= 0 ? 'Unavailable' : `${Math.round((occupancy / zone.capacity) * 100)}%`}
         </span>
       </div>
-      <div
+      {occupancy !== null && zone.capacity > 0 && <div
         className="occupancy-track"
         role="meter"
         aria-label={`${zone.name} occupancy`}
         aria-valuemin={0}
         aria-valuemax={zone.capacity}
-        aria-valuenow={occupancy ?? 0}
+        aria-valuenow={occupancy}
       >
-        <span style={{ width: `${occupancyRatio}%` }} />
-      </div>
+        <span style={{ width: `${occupancyRatio ?? 0}%` }} />
+      </div>}
 
       <div className="zone-card__incident-row">
         <span className="incident-mini-mark" aria-hidden="true">!</span>
@@ -85,9 +99,20 @@ export function ZoneCard({ zone, pendingAction, controlsDisabled, onSimulate }: 
         )}
       </div>
 
+      {onSelect && (
+        <button
+          className="zone-detail-select"
+          type="button"
+          aria-pressed={isSelected}
+          onClick={onSelect}
+        >
+          {isSelected ? 'Selected for detail' : 'View zone detail'}
+        </button>
+      )}
+
       <div className="zone-card__controls">
         <div className="zone-card__controls-heading">
-          <span>Simulation controls</span>
+          <span>Apply simulation controls</span>
           {pendingAction && <span>Sending</span>}
         </div>
         <SimulationControls

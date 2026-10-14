@@ -31,11 +31,12 @@ export function Header({ systemState, lastUpdated }: HeaderProps) {
 
       <nav className="top-navigation" aria-label="Dashboard sections">
         <a href="#overview">Overview</a>
+        <a href="#operations">Operations</a>
         <a href="#zones">Zones</a>
-        <a href="#digital-twin">Digital twin</a>
-        <a href="#waste-detection">Waste CV</a>
+        <a href="#waste-detection">Waste detection</a>
         <a href="#incidents">Incidents</a>
         <a href="#readings">Readings</a>
+        <a href="#notifications">Notifications</a>
       </nav>
 
       <div className={`system-indicator system-indicator--${systemState}`}>

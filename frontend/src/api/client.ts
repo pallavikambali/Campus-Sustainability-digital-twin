@@ -3,6 +3,8 @@ import type {
   DashboardSummary,
   Incident,
   IncidentRecommendation,
+  NotificationConfigStatus,
+  NotificationDelivery,
   ReadingListItem,
   SimulationAction,
   WasteDetection,
@@ -10,7 +12,12 @@ import type {
   ZoneSummary,
 } from './types';
 
-const API_BASE_URL = 'https://campus-sustainability-backend-flg0.onrender.com/api/v1';
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.DEV
+    ? '/api/v1'
+    : 'https://campus-sustainability-backend-flg0.onrender.com/api/v1')
+).replace(/\/$/, '');
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   let response: Response;
@@ -52,12 +59,18 @@ export function getDashboardSummary() {
   return request<DashboardSummary>('/dashboard/summary');
 }
 
-export function getReadings(limit = 8) {
-  return request<ReadingListItem[]>(`/readings?limit=${limit}`);
+export function getReadings(limit = 200, zoneId?: string) {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (zoneId) params.set('zone_id', zoneId);
+  return request<ReadingListItem[]>(`/readings?${params.toString()}`);
 }
 
-export function getIncidents(limit = 8) {
-  return request<Incident[]>(`/incidents?active_only=true&limit=${limit}`);
+export function getIncidents(limit = 200, activeOnly = false) {
+  const params = new URLSearchParams({
+    active_only: String(activeOnly),
+    limit: String(limit),
+  });
+  return request<Incident[]>(`/incidents?${params.toString()}`);
 }
 
 export function getIncident(incidentId: string) {
@@ -83,6 +96,14 @@ export function getWasteDetections(zoneId?: string, limit = 8) {
   return request<WasteDetection[]>(`/waste-detections?${params.toString()}`);
 }
 
+export function getNotificationStatus() {
+  return request<NotificationConfigStatus>('/notifications/status');
+}
+
+export function getNotificationHistory(limit = 50) {
+  return request<NotificationDelivery[]>(`/notifications?limit=${limit}`);
+}
+
 export function uploadWasteImage(zoneId: string, image: File) {
   const form = new FormData();
   form.set('zone_id', zoneId);
@@ -96,11 +117,37 @@ export function uploadWasteImage(zoneId: string, image: File) {
 export async function getDashboardData(): Promise<DashboardData> {
   const [summary, incidents, readings, wasteDetections] = await Promise.all([
     getDashboardSummary(),
-    getIncidents(),
-    getReadings(),
+    getIncidents(200, false),
+    getReadings(200),
     getWasteDetections(),
   ]);
-  return { summary, incidents, readings, wasteDetections };
+  const [historyResult, statusResult] = await Promise.allSettled([
+    getNotificationHistory(50),
+    getNotificationStatus(),
+  ]);
+  const notifications =
+    historyResult.status === 'fulfilled' ? historyResult.value : null;
+  const notificationStatus =
+    statusResult.status === 'fulfilled' ? statusResult.value : null;
+  const notificationError =
+    historyResult.status === 'rejected'
+      ? historyResult.reason instanceof Error
+        ? historyResult.reason.message
+        : 'Notification history is unavailable.'
+      : statusResult.status === 'rejected'
+        ? statusResult.reason instanceof Error
+          ? statusResult.reason.message
+          : 'Notification configuration is unavailable.'
+        : null;
+  return {
+    summary,
+    incidents,
+    readings,
+    wasteDetections,
+    notifications,
+    notificationStatus,
+    notificationError,
+  };
 }
 
 export function runSimulation(zoneId: string, action: SimulationAction) {

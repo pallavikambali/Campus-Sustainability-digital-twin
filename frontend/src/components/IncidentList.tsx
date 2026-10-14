@@ -18,26 +18,29 @@ function formatTime(value: string) {
 }
 
 export function IncidentList({ incidents }: { incidents: Incident[] }) {
+  const chronological = [...incidents].sort(
+    (left, right) => new Date(right.created_at).getTime() - new Date(left.created_at).getTime(),
+  );
   return (
-    <section className="activity-panel" id="incidents">
+    <section className="activity-panel" id="incident-feed">
       <div className="panel-heading">
         <div>
           <p className="eyebrow">Rule-based alerts</p>
-          <h2>Active incidents</h2>
+          <h2>Incident feed</h2>
         </div>
         <span className="panel-count">{incidents.length}</span>
       </div>
-      {incidents.length === 0 ? (
+      {chronological.length === 0 ? (
         <div className="empty-list">
-          <span className="empty-list__mark empty-list__mark--calm" aria-hidden="true">OK</span>
+          <span className="empty-list__mark" aria-hidden="true">—</span>
           <div>
-            <strong>No active incidents</strong>
-            <p>All monitored conditions are within their current rules.</p>
+            <strong>No incident records returned</strong>
+            <p>The incident feed is empty; this is not an inferred all-clear state.</p>
           </div>
         </div>
       ) : (
         <ul className="incident-list">
-          {incidents.map((incident) => (
+          {chronological.map((incident) => (
             <li className="incident-row" key={incident.id}>
               <span
                 className={`incident-severity incident-severity--${incident.severity.toLowerCase()}`}
@@ -53,7 +56,13 @@ export function IncidentList({ incidents }: { incidents: Incident[] }) {
                   </span>
                 </div>
                 <p>{incident.zone_name} <span aria-hidden="true">/</span> {incident.description}</p>
-                <time>{formatTime(incident.created_at)}</time>
+                <div className="incident-feed-meta">
+                  <span className={`incident-state incident-state--${incident.status.toLowerCase()}`}>{incident.status}</span>
+                  <span>Source: {incident.source || 'Unavailable'}</span>
+                  <span>Value: {incident.current_value === null ? 'Unavailable' : String(incident.current_value)}</span>
+                  <span>Expected: {incident.expected_range ?? 'Unavailable'}</span>
+                </div>
+                <time>{formatTime(incident.created_at)}{incident.resolved_at ? ` / Resolved ${formatTime(incident.resolved_at)}` : ''}</time>
                 <RecommendationPanel incidentId={incident.id} />
               </div>
             </li>

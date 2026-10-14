@@ -1,5 +1,25 @@
 import type { ReadingListItem } from '../api/types';
 
+function exportReadings(readings: ReadingListItem[]) {
+  const headers = ['timestamp', 'zone', 'energy_kwh', 'water_liters', 'occupancy'];
+  const rows = readings.map((reading) => [
+    reading.timestamp,
+    reading.zone_name,
+    reading.energy_kwh,
+    reading.water_liters,
+    reading.occupancy,
+  ]);
+  const csv = [headers, ...rows]
+    .map((row) => row.map((value) => `"${String(value).replaceAll('"', '""')}"`).join(','))
+    .join('\r\n');
+  const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = 'visible-sensor-readings.csv';
+  anchor.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 function formatTime(value: string) {
   return new Date(value).toLocaleString([], {
     month: 'short',
@@ -15,20 +35,31 @@ function formatNumber(value: number | string) {
 
 export function SensorReadings({ readings }: { readings: ReadingListItem[] }) {
   return (
-    <section className="activity-panel" id="readings">
+    <section className="activity-panel" id="recent-readings">
       <div className="panel-heading">
         <div>
           <p className="eyebrow">Latest sensor activity</p>
           <h2>Recent readings</h2>
         </div>
-        <span className="readings-unit">Latest first</span>
+        <div className="panel-tools">
+          <span className="readings-unit">Latest first</span>
+          <button
+            className="export-button"
+            type="button"
+            disabled={readings.length === 0}
+            onClick={() => exportReadings(readings)}
+            aria-label="Export visible sensor readings as CSV"
+          >
+            Export CSV
+          </button>
+        </div>
       </div>
       {readings.length === 0 ? (
         <div className="empty-list">
           <span className="empty-list__mark" aria-hidden="true">--</span>
           <div>
             <strong>No readings yet</strong>
-            <p>Run a zone simulation to generate the first sensor sample.</p>
+            <p>No sensor readings have been returned by the API yet.</p>
           </div>
         </div>
       ) : (
@@ -36,10 +67,10 @@ export function SensorReadings({ readings }: { readings: ReadingListItem[] }) {
           <table className="readings-table">
             <thead>
               <tr>
-                <th>Zone / time</th>
-                <th>Energy</th>
-                <th>Water</th>
-                <th>Occupancy</th>
+                <th scope="col">Zone / time</th>
+                <th scope="col">Energy</th>
+                <th scope="col">Water</th>
+                <th scope="col">Occupancy</th>
               </tr>
             </thead>
             <tbody>

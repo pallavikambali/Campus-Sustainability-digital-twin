@@ -5,6 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.core.config import settings
 from app.db import engine
+from app.notification_api import router as notifications_router
 from app.read_api import router as read_api_router
 from app.recommendations.api import router as recommendations_router
 from app.simulation import router as simulation_router
@@ -20,6 +21,7 @@ app.add_middleware(
 )
 app.include_router(simulation_router)
 app.include_router(read_api_router)
+app.include_router(notifications_router)
 app.include_router(waste_detection_router)
 app.include_router(recommendations_router)
 

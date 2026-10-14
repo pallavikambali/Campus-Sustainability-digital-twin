@@ -2,6 +2,7 @@ export type ZoneStatus = 'NORMAL' | 'WARNING' | 'CRITICAL';
 export type IncidentSeverity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 export type SimulationAction = 'energy-spike' | 'water-leak' | 'occupancy-surge' | 'reset';
 export type SystemState = 'connecting' | 'online' | 'offline';
+export type NotificationStatus = 'ACCEPTED' | 'FAILED';
 
 export interface SensorReading {
   id: string;
@@ -108,9 +109,34 @@ export interface WasteDetectionResult extends WasteDetection {
   incident: Incident | null;
 }
 
+export interface NotificationDelivery {
+  id: string;
+  incident_id: string;
+  incident_type: string;
+  zone_name: string;
+  severity: IncidentSeverity;
+  channel: string;
+  status: NotificationStatus;
+  attempted_at: string;
+  error: string | null;
+}
+
+export interface NotificationChannelStatus {
+  status: 'READY' | 'NOT_CONFIGURED';
+  enabled: boolean;
+}
+
+export interface NotificationConfigStatus {
+  email: NotificationChannelStatus;
+  whatsapp: NotificationChannelStatus;
+}
+
 export interface DashboardData {
   summary: DashboardSummary;
   incidents: Incident[];
   readings: ReadingListItem[];
   wasteDetections: WasteDetection[];
+  notifications?: NotificationDelivery[] | null;
+  notificationStatus?: NotificationConfigStatus | null;
+  notificationError?: string | null;
 }
