@@ -1,169 +1,193 @@
-# Campus Sustainability Digital Twin 🌱
+# 🌱 Campus Sustainability Digital Twin
 
-A smart campus sustainability platform that creates a **digital twin of campus zones** to monitor energy, water, occupancy, and waste, detect abnormal conditions, and provide intelligent recommendations.
+An intelligent campus sustainability platform that creates a **digital twin of campus zones** to monitor energy consumption, water usage, occupancy, and waste. The system detects abnormal conditions, visualizes campus status, and provides actionable recommendations.
+
+---
 
 ## 📌 Overview
 
-The Campus Sustainability Digital Twin is designed to help educational institutions monitor and improve the use of campus resources.
+The Campus Sustainability Digital Twin helps educational institutions monitor and improve the use of campus resources through a centralized digital platform.
 
 The system combines:
 
-- Simulated IoT sensor data
-- Rule-based anomaly detection
-- Computer Vision for waste detection
-- A real-time 2D digital twin dashboard
-- GenAI-powered explanations and recommendations
-- PostgreSQL-based data storage
+- 📡 Simulated IoT sensor data
+- ⚡ Rule-based anomaly detection
+- 💧 Water consumption and leakage monitoring
+- 👥 Occupancy monitoring
+- ♻️ Computer vision-based waste detection
+- 🏫 A 2D digital twin dashboard
+- 🤖 GenAI-powered explanations and recommendations
+- 🗄️ PostgreSQL-based data storage
 
-The project is designed as an MVP that can later be connected to real sensors such as ESP32/Arduino devices.
+The project is designed as a **Minimum Viable Product (MVP)** that can later be integrated with physical sensors such as ESP32 and Arduino devices.
 
 ---
 
 ## 🎯 Problem Statement
 
-Educational campuses consume significant amounts of electricity and water and generate different types of waste. Without continuous monitoring, problems such as:
+Educational campuses consume significant amounts of electricity and water and generate different types of waste. Without continuous monitoring, issues such as excessive energy consumption, water leakage, unusual occupancy, and overflowing waste bins may go unnoticed.
 
-- Excessive energy consumption
-- Water leakage
-- Abnormal occupancy
-- Improper waste disposal
+Traditional monitoring approaches often lack a centralized view of campus conditions and provide limited support for identifying problems early.
 
-may go unnoticed.
-
-Our solution provides a centralized digital platform to monitor campus conditions, detect anomalies, visualize them on a digital twin, and provide actionable recommendations.
+Our solution addresses this challenge through a digital platform that monitors campus conditions, detects anomalies, visualizes the status of different zones, and provides recommendations to support sustainable resource management.
 
 ---
 
 ## 💡 Key Features
 
-### 1. Digital Twin Dashboard
+### 1. 🏫 Digital Twin Dashboard
 
-A 2D digital representation of campus zones that displays their current operational status.
+A 2D digital representation of campus zones that displays their operational status.
 
-Currently modeled zones include:
+The modeled zones include:
 
 - 🏫 Academic Block
 - 📚 Library
 - 🏠 Hostel Block
 
-Each zone can have a status such as:
+Each zone can display a status such as:
 
-- 🟢 Normal
-- 🟡 Warning
-- 🔴 Critical
+- 🟢 **Normal** — Conditions are within expected limits.
+- 🟡 **Warning** — An unusual condition requires attention.
+- 🔴 **Critical** — A significant issue requires prompt action.
 
----
+The dashboard provides a centralized view of campus conditions and detected incidents.
 
-### 2. Sensor Data Simulation
+### 2. 📡 Sensor Data Simulation
 
-Since physical IoT sensors are not required for the MVP, the system currently simulates sensor readings for:
+The MVP simulates sensor readings instead of requiring physical IoT hardware.
+
+The simulated readings cover:
 
 - ⚡ Energy consumption
 - 💧 Water consumption
 - 👥 Occupancy
 
-The simulator can generate different scenarios such as:
+The system supports scenarios such as:
 
-- Energy spike
-- Water leakage
+- Energy consumption spike
+- Possible water leakage
 - Occupancy surge
 - Reset to normal conditions
 
-This architecture allows simulated sensors to be replaced with real IoT devices later.
+This approach allows the application to demonstrate sustainability monitoring without requiring physical sensors.
 
----
+In future versions, simulated readings can be replaced with data collected from real IoT devices.
 
-### 3. Rule-Based Anomaly Detection
+### 3. 🚨 Rule-Based Anomaly Detection
 
-The system uses deterministic rules to identify abnormal conditions.
+The system uses predefined rules and thresholds to identify abnormal campus conditions.
 
-Examples:
+Examples include:
 
 - Excessive energy consumption
-- Possible water leakage
-- Occupancy exceeding the zone capacity
+- Unusual water consumption that may indicate a leak
+- Occupancy exceeding the configured zone capacity
 
-Detected anomalies are converted into incidents with severity levels such as:
+Detected anomalies can be represented as incidents with severity levels such as:
 
-- WARNING
-- CRITICAL
+- `WARNING`
+- `CRITICAL`
 
-> **Important:** GenAI is not responsible for detecting anomalies. Detection is performed using predefined rules and Computer Vision.
+The rules provide a deterministic and explainable method for identifying unusual conditions.
 
----
+**Important:** GenAI does not perform rule-based anomaly detection. The detection logic identifies the issue before the recommendation system explains it.
 
-### 4. Computer Vision Waste Detection
+### 4. ♻️ Computer Vision Waste Detection
 
-The project includes a replaceable waste detection architecture.
+The project includes a modular waste-detection architecture designed to support different detection implementations.
 
-Currently, a mock detector is used for the MVP, while the system is designed to support an optional YOLO-based detector.
+The current implementation supports:
 
-The system can classify waste detection severity based on the number of detected waste objects.
+- Mock waste detections for MVP demonstrations
+- An optional YOLO-based object-detection pipeline
+- Configurable waste-detection severity thresholds
 
-Severity levels include:
+The available `yolo11n.pt` weights contain standard pretrained object classes. They are not a custom-trained waste-overflow model.
 
-- NONE
-- LOW
-- MEDIUM
-- HIGH
+Therefore, custom classification of bins as normal, empty, or overflowing has not been established by these weights alone.
 
-A high-severity waste detection can generate an active incident for the corresponding zone.
+The architecture can be extended with a custom-trained model to identify bin conditions from images.
 
----
+Waste-detection severity levels include:
 
-### 5. GenAI Recommendations 🤖
+- `NONE`
+- `LOW`
+- `MEDIUM`
+- `HIGH`
 
-GenAI is used after an incident has already been detected.
+The application can use its configured detection logic to determine severity and associate high-severity detections with incidents for the corresponding campus zone.
 
-It receives trusted incident information and provides:
+**Future enhancement:** Integrate and validate a custom-trained waste-bin classification model using appropriately labelled images.
 
-- Explanation of the detected issue
-- Possible impact
-- Recommended actions
-- Advisory guidance
+### 5. 🤖 GenAI-Powered Recommendations
 
-The system also includes a rule-based fallback so that recommendations remain available even when the AI service is unavailable.
+The recommendation component helps explain incidents after they have been detected.
 
-> **GenAI does not perform anomaly detection. It explains detected incidents and provides recommendations.**
+Based on the incident information provided to it, GenAI can assist with:
+
+- Explaining the detected issue
+- Describing its possible impact
+- Suggesting recommended actions
+- Providing sustainability guidance
+
+The application also includes a rule-based fallback mechanism so that recommendations can remain available when the AI service is unavailable, provided the fallback is correctly configured.
+
+**Important:** GenAI is used for explanations and recommendations, not as the primary anomaly-detection mechanism.
+
+### 6. 🗄️ PostgreSQL Database
+
+The backend is designed to use PostgreSQL for persistent application data.
+
+The data model supports information associated with:
+
+- Campus zones
+- Sensor readings
+- Incidents
+- Waste detections
+- Recommendations
+- Reports
+
+Database storage allows the application to maintain structured sustainability data and support future analytics.
 
 ---
 
 ## 🏗️ System Architecture
 
+The application follows a modular architecture that separates data simulation, detection, visualization, and recommendations.
+
 ```text
-                    ┌─────────────────────┐
-                    │   Sensor Simulator  │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │      Backend        │
-                    │      FastAPI        │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │   Rule-Based        │
-                    │ Anomaly Detection   │
-                    └──────────┬──────────┘
-                               │
-              ┌────────────────┴────────────────┐
-              ▼                                 ▼
-    ┌──────────────────┐              ┌──────────────────┐
-    │   Digital Twin   │              │ Computer Vision  │
-    │    Dashboard     │              │ Waste Detection  │
-    └────────┬─────────┘              └────────┬─────────┘
-             │                                 │
-             └────────────────┬────────────────┘
-                              ▼
-                    ┌─────────────────────┐
-                    │       GenAI         │
-                    │ Recommendations &   │
-                    │    Explanations     │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │     PostgreSQL      │
-                    │      Database       │
-                    └─────────────────────┘
+                 SENSOR SIMULATOR
+                        |
+                        v
+                 FASTAPI BACKEND
+                        |
+                        v
+                RULE-BASED ANOMALY
+                    DETECTION
+                        |
+                        v
+                     INCIDENTS
+                        |
+             +----------+----------+
+             |                     |
+             v                     v
+      DIGITAL TWIN          GENAI / RULE-BASED
+       DASHBOARD              RECOMMENDATIONS
+
+
+                  WASTE IMAGES
+                        |
+                        v
+                 COMPUTER VISION
+                  WASTE DETECTION
+                        |
+                        v
+                WASTE SEVERITY
+                        |
+                        v
+                     INCIDENTS
+
+
+                  POSTGRESQL
+             Persistent Application Data
