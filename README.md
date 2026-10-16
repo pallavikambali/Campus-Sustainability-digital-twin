@@ -167,7 +167,3 @@ The system also includes a rule-based fallback so that recommendations remain av
                     │     PostgreSQL      │
                     │      Database       │
                     └─────────────────────┘
-
-## Project Maintenance
-
-This project is actively maintained by the AikyaNexus team.
